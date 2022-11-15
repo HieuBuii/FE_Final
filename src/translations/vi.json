@@ -8,7 +8,7 @@
     "choose-doctor": "Chọn bác sĩ giỏi",
     "fee": "Cẩm nang",
     "check-health": "Cẩm nang y tế",
-    "support": "Hỗ trợ",
+    "support": "Đăng nhập",
     "welcome": "Xin chào, "
   },
 
@@ -52,6 +52,7 @@
     "add": "Quản lý người dùng",
     "email": "Email",
     "password": "Mật khẩu",
+    "password2": "Nhập lại mật khẩu",
     "first-name": "Tên",
     "last-name": "Họ",
     "address": "Địa chỉ",
@@ -64,7 +65,8 @@
     "save": "Thêm người dùng",
     "edit": "Lưu thay đổi",
     "desc": "Thông tin chuyên khoa",
-    "add-image": "Thêm ảnh"
+    "add-image": "Thêm ảnh",
+    "sign-up": "Đăng ký"
   },
   "manage-specialty": {
     "title": "Quản lý chuyên khoa",

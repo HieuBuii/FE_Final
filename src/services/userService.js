@@ -9,6 +9,10 @@ const getAllUsers = (userId, token) => {
   });
 };
 
+const getInfoUser = (userId) => {
+  return axios.get(`/api/home-get-all-users?id=${userId}`);
+};
+
 const getAllDoctorForHome = () => {
   return axios.get(`/api/home-get-all-doctocs`);
 };
@@ -17,6 +21,10 @@ const addUserService = (data, token) => {
   return axios.post("/api/create-user", data, {
     headers: { Authorization: `Bearer ${token}` },
   });
+};
+
+const userSignUp = (data) => {
+  return axios.post("/api/patient-create-user", data);
 };
 
 const deleteUserService = (userId, token) => {
@@ -30,6 +38,10 @@ const editUserService = (inputData, token) => {
   return axios.put("/api/edit-user", inputData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+};
+
+const userEditInfo = (inputData) => {
+  return axios.put("/api/home-edit-user", inputData);
 };
 
 const getAllCodeService = (inputType) => {
@@ -198,6 +210,10 @@ const getHandBookById = (handBookId) => {
   return axios.get(`/api/get-handbook-by-id?id=${handBookId}`);
 };
 
+const getPatientAppointmentService = (patientId) => {
+  return axios.get(`/api/get-patient-appoinment?patientId=${patientId}`);
+};
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -242,4 +258,8 @@ export {
   getHandBookById,
   cancelAppointment,
   getHistoryDoctorService,
+  userSignUp,
+  userEditInfo,
+  getInfoUser,
+  getPatientAppointmentService,
 };

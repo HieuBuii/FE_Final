@@ -254,11 +254,22 @@
       }
     }
   }
+  .home-header-container
+    .home-header-content
+    .content-right
+    .content-support
+    .content-question
+    .user {
+    margin-right: 15px;
+  }
 }
 
 @media screen and (max-width: 475px) {
   .section-common .section-container .section-body .section-custom .custom-img {
     padding: 10px;
     min-height: 220px;
+  }
+  .home-header-container .home-header-content .content-left .header-logo img {
+    width: 140px;
   }
 }

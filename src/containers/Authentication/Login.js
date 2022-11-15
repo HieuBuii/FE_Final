@@ -41,6 +41,10 @@ class Login extends Component {
     });
   };
 
+  goToSignUp = () => {
+    this.redirectToSystemPage("/sign-up");
+  };
+
   handleLogin = async () => {
     this.setState({
       errMessage: "",
@@ -53,7 +57,14 @@ class Login extends Component {
         });
       }
       if (data && data.errCode === 0) {
-        this.redirectToSystemPage("/doctor/manage-schedule");
+        let role = data.user.roleId;
+        if (role === "R1") {
+          this.redirectToSystemPage("/system/user-redux");
+        } else if (role === "R2") {
+          this.redirectToSystemPage("/doctor/manage-schedule");
+        } else if (role === "R3") {
+          this.redirectToSystemPage("/");
+        }
         this.props.userLoginSuccess(data.user);
       }
     } catch (e) {
@@ -139,18 +150,17 @@ class Login extends Component {
               </button>
             </div>
             <div
+              className="col-12 login-sign-up mt-4"
+              onClick={() => this.goToSignUp()}
+            >
+              Don't have an account? <span>Sign up</span>
+            </div>
+            <div
               className="col-12 login-forgot"
               onClick={() => this.handleForgotPW()}
             >
               Forgot Your Password ?
             </div>
-            {/* <div className="col-12">
-              <div className="login-social">
-                <div className="login-other">Or Login With:</div>
-                <i className="fab fa-facebook-f facebook"></i>
-                <i className="fab fa-google-plus-g google"></i>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

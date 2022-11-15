@@ -8,6 +8,7 @@ import { changeLanguageApp } from "../../store/actions";
 import { LENGUAGES, USER_ROLE } from "../../utils/constant";
 import { FormattedMessage } from "react-intl";
 import _ from "lodash";
+import HomeHeader from "../HomePage/HomeHeader";
 
 class Header extends Component {
   constructor(props) {
@@ -26,6 +27,8 @@ class Header extends Component {
         menu = adminMenu;
       } else if (role === USER_ROLE.DOCTOR) {
         menu = doctorMenu;
+      } else {
+        menu = [];
       }
     }
     this.setState({

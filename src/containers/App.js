@@ -26,6 +26,8 @@ import ViewMoreClinic from "./HomePage/User_view/Clinic/ViewMoreClinic";
 import ViewMoreSpecialty from "./HomePage/User_view/Specialty/ViewMoreSpecialty";
 import DetailHandBook from "./HomePage/User_view/HandBook/DetailHandBook";
 import ViewMoreHandBook from "./HomePage/User_view/HandBook/ViewMoreHandBook";
+import SignUp from "./System/Admin/SignUp";
+import DetailUser from "./HomePage/User_view/User/DetailUser";
 
 class App extends Component {
   handlePersistorState = () => {
@@ -61,6 +63,10 @@ class App extends Component {
                     component={userIsNotAuthenticated(Login)}
                   />
                   <Route
+                    path={path.SIGN_UP}
+                    component={userIsNotAuthenticated(SignUp)}
+                  />
+                  <Route
                     path={path.SYSTEM}
                     component={userIsAuthenticated(System)}
                   />
@@ -70,6 +76,7 @@ class App extends Component {
                     component={userIsAuthenticated(Doctor)}
                   />
                   <Route path={path.DETAIL_DOCTOR} component={DetailDoctor} />
+                  <Route path={path.DETAIL_USER} component={DetailUser} />
                   <Route
                     path={path.VIEW_MORE_DOCTOR}
                     component={ViewMoreDoctor}

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./HomeHeader.scss";
 import { FormattedMessage } from "react-intl";
+import * as actions from "../../store/actions";
 import { LENGUAGES } from "../../utils/constant";
 import { changeLanguageApp } from "../../store/actions";
 import mainLogo from "../../assets/images/Logo.png";
@@ -11,11 +12,30 @@ import SliderNav from "./SliderNav";
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
-    this.state = { isShowNavBar: false };
+    this.state = { isShowNavBar: false, userInfo: "", login: false };
   }
   changeLanguage = (language) => {
     this.props.changeLanguageAppRedux(language);
   };
+
+  componentDidMount() {
+    this.setState({
+      login: this.props.isLoggedIn,
+    });
+    if (this.props.userInfo) {
+      this.setState({
+        userInfo: this.props.userInfo,
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isLoggedIn !== this.props.isLoggedIn) {
+      this.setState({
+        login: this.props.isLoggedIn,
+      });
+    }
+  }
 
   goToHome = () => {
     if (this.props.history) {
@@ -24,6 +44,8 @@ class HomeHeader extends Component {
   };
 
   handleViewMore = (id) => {
+    console.log(this.state.userInfo);
+    let userId = this.state.userInfo.id;
     if (this.props.history) {
       if (id === "specialist") this.props.history.push(`/view-more-specialty`);
     }
@@ -35,6 +57,16 @@ class HomeHeader extends Component {
     }
     if (this.props.history) {
       if (id === "facilities") this.props.history.push(`/view-more-clinic`);
+    }
+    if (this.props.history) {
+      if (id === "login") this.props.history.push(`/login`);
+    }
+    if (this.props.history) {
+      if (id === "password") this.props.history.push(`/system/manage-password`);
+    }
+    if (this.props.history) {
+      if (id === "account")
+        this.props.history.push(`/detail-user/id=${userId}`);
     }
   };
 
@@ -52,6 +84,8 @@ class HomeHeader extends Component {
 
   render() {
     let language = this.props.language;
+    let { login } = this.state;
+    const { processLogout } = this.props;
     return (
       <>
         <SliderNav
@@ -122,12 +156,40 @@ class HomeHeader extends Component {
               </li>
             </ul>
             <div className="content-right">
-              {/* <div className="content-support">
-                <i className="fas fa-question question"></i>
+              <div className="content-support">
                 <span className="content-question">
-                  <FormattedMessage id="homeheader.support" />
+                  {login === false ? (
+                    <i
+                      onClick={() => this.handleViewMore("login")}
+                      className="fas fa-sign-in-alt sign-in"
+                      title={
+                        language === LENGUAGES.VI ? "Đăng nhập" : "Sign in"
+                      }
+                    ></i>
+                  ) : (
+                    <span className="user">
+                      <i className="fas fa-user sign-in"></i>
+                      <ul className="list-options">
+                        <li
+                          className="list-item"
+                          onClick={() => this.handleViewMore("account")}
+                        >
+                          Tài khoản của tôi
+                        </li>
+                        <li
+                          className="list-item"
+                          onClick={() => this.handleViewMore("password")}
+                        >
+                          Đổi mật khẩu
+                        </li>
+                        <li className="list-item" onClick={processLogout}>
+                          Đăng xuất
+                        </li>
+                      </ul>
+                    </span>
+                  )}
                 </span>
-              </div> */}
+              </div>
               <div className="content-lang">
                 <span
                   className={
@@ -163,6 +225,7 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.user.isLoggedIn,
     language: state.app.language,
+    userInfo: state.user.userInfo,
   };
 };
 
@@ -170,6 +233,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     changeLanguageAppRedux: (languages) =>
       dispatch(changeLanguageApp(languages)),
+    processLogout: () => dispatch(actions.processLogout()),
   };
 };
 
