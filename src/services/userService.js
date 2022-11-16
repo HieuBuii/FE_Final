@@ -214,6 +214,14 @@ const getPatientAppointmentService = (patientId) => {
   return axios.get(`/api/get-patient-appoinment?patientId=${patientId}`);
 };
 
+const postRating = (data) => {
+  return axios.post("/api/post-rating", data);
+};
+
+const getRating = (doctorId) => {
+  return axios.get(`/api/get-rating?doctorId=${doctorId}`);
+};
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -262,4 +270,6 @@ export {
   userEditInfo,
   getInfoUser,
   getPatientAppointmentService,
+  postRating,
+  getRating,
 };

@@ -8,6 +8,8 @@ import {
   userEditInfo,
   getInfoUser,
   getPatientAppointmentService,
+  postRating,
+  cancelAppointment,
 } from "../../../../services/userService";
 import { LENGUAGES, CommonUtils } from "../../../../utils";
 import LoadingOverlay from "react-loading-overlay";
@@ -49,6 +51,9 @@ class DetailUser extends Component {
       rating: 0,
       comment: "",
       doctorId: "",
+      patientId: "",
+      bookingId: "",
+      showBtn: true,
     };
   }
 
@@ -170,6 +175,7 @@ class DetailUser extends Component {
     e.preventDefault();
     let isValid = this.validInput();
     if (isValid) {
+      this.setState({ isLoading: true });
       let res = await userEditInfo({
         id:
           this.props.userInfo && this.props.userInfo.id
@@ -185,6 +191,7 @@ class DetailUser extends Component {
         positionId: "P0",
         image: this.state.avatar,
       });
+      this.setState({ isLoading: false });
       if (res && res.errCode === 0) {
         toast.success("Lưu thay đổi thành công !!");
         if (this.props.userInfo && this.props.userInfo.id) {
@@ -273,6 +280,8 @@ class DetailUser extends Component {
       isShowModalRating: true,
       selectedAppointment: item,
       doctorId: item.doctorId,
+      bookingId: item.id,
+      patientId: item.patientId,
     });
   };
 
@@ -282,9 +291,64 @@ class DetailUser extends Component {
     });
   }
 
-  sendRating = () => {
-    let { doctorId, comment, rating } = this.state;
-    console.log(doctorId, comment, rating);
+  sendRating = async () => {
+    let { doctorId, comment, rating, patientId, bookingId } = this.state;
+    this.setState({ isLoading: true });
+    let res = await postRating({
+      doctorId: doctorId,
+      patientId: patientId,
+      bookingId: bookingId,
+      comment: comment,
+      rating: rating,
+    });
+    this.setState({ isLoading: false });
+    if (res && res.errCode === 0) {
+      toast.success("Gửi đánh giá thành công !!");
+      this.setState({
+        showBtn: false,
+        isShowModalRating: false,
+      });
+      if (this.props.userInfo && this.props.userInfo.id) {
+        let id = this.props.userInfo.id;
+        let appoinment = await getPatientAppointmentService(id);
+        if (appoinment && appoinment.errCode === 0) {
+          this.setState({
+            listAppointment: appoinment.data,
+          });
+        }
+      }
+    } else {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    }
+  };
+
+  handleCancelAppointment = async (item) => {
+    this.setState({
+      isLoading: true,
+    });
+    let res = await cancelAppointment({
+      doctorId: item.doctorId,
+      patientId: item.patientId,
+      date: item.date,
+      timeType: item.timeType,
+    });
+    this.setState({
+      isLoading: false,
+    });
+    if (res && res.errCode === 0) {
+      toast.success("Huỷ lịch hẹn thành công !!");
+      if (this.props.userInfo && this.props.userInfo.id) {
+        let id = this.props.userInfo.id;
+        let appoinment = await getPatientAppointmentService(id);
+        if (appoinment && appoinment.errCode === 0) {
+          this.setState({
+            listAppointment: appoinment.data,
+          });
+        }
+      }
+    } else {
+      toast.error("Huỷ lịch hẹn thất bại, vui lòng thử lại !!");
+    }
   };
 
   render() {
@@ -305,6 +369,7 @@ class DetailUser extends Component {
       isShowModalDetail,
       selectedAppointment,
       isShowModalRating,
+      showBtn,
     } = this.state;
     return (
       <>
@@ -528,16 +593,28 @@ class DetailUser extends Component {
                                       >
                                         Xem chi tiết
                                       </button>
-                                      {item.statusId === "S3" && (
-                                        <button
-                                          className="btn btn-send"
-                                          onClick={() =>
-                                            this.handleRating(item)
-                                          }
-                                        >
-                                          Đánh giá
-                                        </button>
-                                      )}
+                                      {item.statusId === "S3" &&
+                                        showBtn === true && (
+                                          <button
+                                            className="btn btn-send"
+                                            onClick={() =>
+                                              this.handleRating(item)
+                                            }
+                                          >
+                                            Đánh giá
+                                          </button>
+                                        )}
+                                      {item.statusId === "S1" &&
+                                        showBtn === true && (
+                                          <button
+                                            className="btn btn-danger px-2"
+                                            onClick={() =>
+                                              this.handleCancelAppointment(item)
+                                            }
+                                          >
+                                            Huỷ
+                                          </button>
+                                        )}
                                     </div>
                                   </td>
                                 </tr>

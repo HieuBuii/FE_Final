@@ -64,6 +64,35 @@
   }
 }
 
+.detail-doctor-comments {
+  padding: 10px 0;
+  .total-rating {
+    .rating {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+  .title-comment {
+    padding: 10px 0;
+    font-size: 17px;
+    font-weight: bold;
+    color: cornflowerblue;
+  }
+  .comment-content-block {
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px #20212447;
+    margin-bottom: 20px;
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .user-rating {
+      margin-bottom: 5px;
+    }
+  }
+}
+
 .css-df17o1 {
   position: fixed;
   top: 0;

@@ -125,6 +125,7 @@ class DoctorSchedule extends Component {
   };
 
   render() {
+    console.log(this.props.userInfo);
     let { listDays, availabelTime } = this.state;
     let { language } = this.props;
     return (
@@ -194,6 +195,7 @@ class DoctorSchedule extends Component {
 const mapStateToProps = (state) => {
   return {
     language: state.app.language,
+    userInfo: state.user.userInfo,
   };
 };
 

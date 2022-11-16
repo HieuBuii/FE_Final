@@ -8,6 +8,8 @@ import DoctorSchedule from "./DoctorSchedule";
 import DoctorMore from "./DoctorMore";
 import Footer from "../../Section/Footer";
 import LoadingOverlay from "react-loading-overlay";
+import StarRatings from "react-star-ratings";
+import { getRating } from "../../../../services/userService";
 
 class DetailDoctor extends Component {
   constructor(props) {
@@ -15,19 +17,48 @@ class DetailDoctor extends Component {
     this.state = {
       infoDoctor: [],
       isLoading: false,
+      dataRating: [],
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevProps.infoDoctor !== this.props.infoDoctor) {
       this.setState({
         infoDoctor: this.props.infoDoctor,
       });
     }
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      if (
+        this.props.match &&
+        this.props.match.params &&
+        this.props.match.params.id
+      ) {
+        let doctorId = this.props.match.params.id;
+        let res = await getRating(doctorId);
+        if (res && res.errCode === 0) {
+          this.setState({
+            dataRating: res.data,
+          });
+        }
+      }
+    }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.getInfoDoctor(this.props.match.params.id);
+    if (
+      this.props.match &&
+      this.props.match.params &&
+      this.props.match.params.id
+    ) {
+      let doctorId = this.props.match.params.id;
+      let res = await getRating(doctorId);
+      if (res && res.errCode === 0) {
+        this.setState({
+          dataRating: res.data,
+        });
+      }
+    }
   }
 
   handleShowLoading = (boolean) => {
@@ -37,7 +68,7 @@ class DetailDoctor extends Component {
   };
 
   render() {
-    let { infoDoctor } = this.state;
+    let { infoDoctor, dataRating } = this.state;
     let language = this.props.language;
     let valueVi = "",
       valueEn = "";
@@ -49,6 +80,12 @@ class DetailDoctor extends Component {
       infoDoctor && infoDoctor.Doctor_Intro
         ? infoDoctor.Doctor_Intro.contentHTML
         : "";
+    let rating = 0;
+    if (dataRating && dataRating.length > 0) {
+      rating =
+        dataRating[0].ratingDoctor.Doctor_Info.total /
+        dataRating[0].ratingDoctor.Doctor_Info.count;
+    }
     return (
       <>
         <LoadingOverlay active={this.state.isLoading} spinner text="Loading...">
@@ -105,7 +142,50 @@ class DetailDoctor extends Component {
               <div dangerouslySetInnerHTML={{ __html: dataContent }} />
             </div>
           </div>
-          <div className="detail-doctor-comments"></div>
+          {dataRating && dataRating.length > 0 ? (
+            <div className="detail-doctor-comments container">
+              <div className="total-rating">
+                <span className="rating">Rating:</span>
+                <StarRatings
+                  rating={rating}
+                  starRatedColor="rgb(230, 67, 47)"
+                  numberOfStars={5}
+                  name="rating"
+                  starDimension="15px"
+                  isSelectable={false}
+                />
+                <span>{`(${dataRating[0].ratingDoctor.Doctor_Info.count})`}</span>
+              </div>
+              <div className="title-comment">Nhận xét của khách hàng:</div>
+              {dataRating.map((item, index) => {
+                return (
+                  <div className="comment-content-block" key={index}>
+                    <div className="user-name">
+                      {language === LENGUAGES.VI
+                        ? `${item.ratingPatient.lastName} ${item.ratingPatient.firstName}`
+                        : `${item.ratingPatient.firstName} ${item.ratingPatient.lastName}`}
+                    </div>
+                    <div className="user-rating">
+                      <StarRatings
+                        rating={item.rating}
+                        starRatedColor="rgb(230, 67, 47)"
+                        numberOfStars={5}
+                        name="rating"
+                        starDimension="13px"
+                        isSelectable={false}
+                      />
+                    </div>
+                    <div className="user-comment">{item.comment}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="detail-doctor-comments container">
+              <p>Bác sĩ hiện chưa có đánh giá !!</p>
+            </div>
+          )}
+
           <Footer />
         </LoadingOverlay>
       </>

@@ -44,7 +44,6 @@ class HomeHeader extends Component {
   };
 
   handleViewMore = (id) => {
-    console.log(this.state.userInfo);
     let userId = this.state.userInfo.id;
     if (this.props.history) {
       if (id === "specialist") this.props.history.push(`/view-more-specialty`);
