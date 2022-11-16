@@ -5,6 +5,7 @@ import * as actions from "../../store/actions";
 import "./Login.scss";
 import { handleLoginApi, forgotPWService } from "../../services/userService";
 import { toast } from "react-toastify";
+import LoadingOverlay from "react-loading-overlay";
 
 class Login extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class Login extends Component {
       password: "",
       isShowPassword: false,
       errMessage: "",
+      isLoading: false,
     };
   }
 
@@ -50,12 +52,15 @@ class Login extends Component {
       errMessage: "",
     });
     try {
+      this.setState({ isLoading: true });
       let data = await handleLoginApi(this.state.username, this.state.password);
+      this.setState({ isLoading: false });
       if (data && data.errCode !== 0) {
         this.setState({
           errMessage: data.message,
         });
       }
+      this.setState({ isLoading: false });
       if (data && data.errCode === 0) {
         let role = data.user.roleId;
         if (role === "R1") {
@@ -68,6 +73,7 @@ class Login extends Component {
         this.props.userLoginSuccess(data.user);
       }
     } catch (e) {
+      this.setState({ isLoading: false });
       if (e.response) {
         if (e.response.data) {
           this.setState({
@@ -90,7 +96,9 @@ class Login extends Component {
         errMessage: "Vui lòng nhập địa chỉ Email để tiếp tục !!",
       });
     } else {
+      this.setState({ isLoading: true });
       let res = await forgotPWService({ email: this.state.username });
+      this.setState({ isLoading: false });
       if (res && res.errCode === 0) {
         toast.success(
           "Gửi yêu cầu thành công, vui lòng kiểm tra hộp thư Email để tiếp tục !!"
@@ -103,67 +111,72 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="login-background">
-        <div className="login-container">
-          <div className="login-content row">
-            <div className="col-12 login-title">LOGIN</div>
-            <div className="col-12 form-group login-input">
-              <label className="login-label">Username:</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter Your Username"
-                onChange={(e) => this.handleInputUsername(e)}
-                onKeyDown={(e) => this.handleEnterPress(e)}
-              />
-            </div>
-            <div className="col-12 form-group login-input">
-              <label className="login-label">Password:</label>
-              <div className="login-password">
+      <LoadingOverlay active={this.state.isLoading} spinner text="Loading...">
+        <div className="login-background">
+          <div className="login-container">
+            <div className="login-content row">
+              <div className="col-12 login-title">LOGIN</div>
+              <div className="col-12 form-group login-input">
+                <label className="login-label">Username:</label>
                 <input
-                  type={this.state.isShowPassword ? "text" : "password"}
+                  type="text"
                   className="form-control"
-                  placeholder="Enter Your Password"
-                  onChange={(e) => this.handleInputPassword(e)}
+                  placeholder="Enter Your Username"
+                  onChange={(e) => this.handleInputUsername(e)}
                   onKeyDown={(e) => this.handleEnterPress(e)}
                 />
-                <div
-                  className="login-password-icon"
-                  onClick={() => this.handleShowHidePassword()}
-                >
-                  <i
-                    className={
-                      this.state.isShowPassword
-                        ? "far fa-eye"
-                        : "far fa-eye-slash"
-                    }
-                  ></i>
+              </div>
+              <div className="col-12 form-group login-input">
+                <label className="login-label">Password:</label>
+                <div className="login-password">
+                  <input
+                    type={this.state.isShowPassword ? "text" : "password"}
+                    className="form-control"
+                    placeholder="Enter Your Password"
+                    onChange={(e) => this.handleInputPassword(e)}
+                    onKeyDown={(e) => this.handleEnterPress(e)}
+                  />
+                  <div
+                    className="login-password-icon"
+                    onClick={() => this.handleShowHidePassword()}
+                  >
+                    <i
+                      className={
+                        this.state.isShowPassword
+                          ? "far fa-eye"
+                          : "far fa-eye-slash"
+                      }
+                    ></i>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="col-12" style={{ color: "red" }}>
-              {this.state.errMessage}
-            </div>
-            <div className="col-12">
-              <button className="btn-login" onClick={() => this.handleLogin()}>
-                Login
-              </button>
-            </div>
-            <div
-              className="col-12 login-sign-up mt-4"
-              onClick={() => this.goToSignUp()}
-            >
-              Don't have an account? <span>Sign up</span>
-            </div>
-            <div
-              className="col-12 login-forgot"
-              onClick={() => this.handleForgotPW()}
-            >
-              Forgot Your Password ?
+              <div className="col-12" style={{ color: "red" }}>
+                {this.state.errMessage}
+              </div>
+              <div className="col-12">
+                <button
+                  className="btn-login"
+                  onClick={() => this.handleLogin()}
+                >
+                  Login
+                </button>
+              </div>
+              <div
+                className="col-12 login-sign-up mt-4"
+                onClick={() => this.goToSignUp()}
+              >
+                Don't have an account? <span>Sign up</span>
+              </div>
+              <div
+                className="col-12 login-forgot"
+                onClick={() => this.handleForgotPW()}
+              >
+                Forgot Your Password ?
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </LoadingOverlay>
     );
   }
 }

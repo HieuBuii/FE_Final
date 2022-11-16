@@ -327,6 +327,7 @@ class DetailUser extends Component {
       isLoading: true,
     });
     let res = await cancelAppointment({
+      bookingId: item.id,
       doctorId: item.doctorId,
       patientId: item.patientId,
       date: item.date,

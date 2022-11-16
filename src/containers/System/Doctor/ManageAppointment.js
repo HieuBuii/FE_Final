@@ -24,6 +24,7 @@ class ManageAppointment extends Component {
       isShowModal: false,
       dataForModal: [],
       isLoading: false,
+      id: "",
     };
   }
 
@@ -35,9 +36,22 @@ class ManageAppointment extends Component {
         data: res.data,
       });
     }
+    if (this.props.userInfo && this.props.userInfo.id) {
+      this.setState({
+        id: this.props.userInfo.id,
+      });
+    }
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate(prevProps) {
+    if (this.props.userInfo.id !== prevProps.userInfo.id) {
+      if (this.props.userInfo.id) {
+        this.setState({
+          id: this.props.userInfo.id,
+        });
+      }
+    }
+  }
 
   handleOnchangeDatePicker = async (date) => {
     this.setState({
@@ -55,10 +69,12 @@ class ManageAppointment extends Component {
   };
 
   handleSucceed = async (item) => {
+    let date = new Date().setHours(0, 0, 0, 0);
     this.setState({
       isLoading: true,
     });
     let res = await confirmAppointmentSucceed({
+      bookingId: item.id,
       doctorId: item.doctorId,
       patientId: item.patientId,
       date: item.date,
@@ -69,10 +85,7 @@ class ManageAppointment extends Component {
     });
     if (res && res.errCode === 0) {
       toast.success("Xác nhận thành công !!");
-      let response = await getAppointmenDoctorService(
-        this.props.userInfo.id,
-        this.state.currentDate.getTime()
-      );
+      let response = await getAppointmenDoctorService(this.state.id, date);
       if (response && response.errCode === 0) {
         this.setState({
           data: response.data,
@@ -91,10 +104,12 @@ class ManageAppointment extends Component {
   };
 
   handleCancel = async (item) => {
+    let date = new Date().setHours(0, 0, 0, 0);
     this.setState({
       isLoading: true,
     });
     let res = await cancelAppointment({
+      bookingId: item.id,
       doctorId: item.doctorId,
       patientId: item.patientId,
       date: item.date,
@@ -105,10 +120,7 @@ class ManageAppointment extends Component {
     });
     if (res && res.errCode === 0) {
       toast.success("Huỷ lịch hẹn thành công !!");
-      let response = await getAppointmenDoctorService(
-        this.props.userInfo.id,
-        this.state.currentDate.getTime()
-      );
+      let response = await getAppointmenDoctorService(this.state.id, date);
       if (response && response.errCode === 0) {
         this.setState({
           data: response.data,

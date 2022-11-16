@@ -125,7 +125,6 @@ class DoctorSchedule extends Component {
   };
 
   render() {
-    console.log(this.props.userInfo);
     let { listDays, availabelTime } = this.state;
     let { language } = this.props;
     return (
@@ -186,6 +185,7 @@ class DoctorSchedule extends Component {
           closeModalBooking={this.closeModalBooking}
           dataTime={this.state.dataScheduleModal}
           handleLoadingToChild={this.handleLoading}
+          isLoggedIn={this.props.isLoggedIn}
         />
       </>
     );
@@ -194,6 +194,7 @@ class DoctorSchedule extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isLoggedIn: state.user.isLoggedIn,
     language: state.app.language,
     userInfo: state.user.userInfo,
   };
