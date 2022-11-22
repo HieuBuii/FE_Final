@@ -9,6 +9,12 @@ const getAllUsers = (userId, token) => {
   });
 };
 
+const handleGetUserByEmail = (email, token) => {
+  return axios.get(`/api/get-user-by-email?email=${email}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 const getInfoUser = (userId) => {
   return axios.get(`/api/home-get-all-users?id=${userId}`);
 };
@@ -225,6 +231,7 @@ const getRating = (doctorId) => {
 export {
   handleLoginApi,
   getAllUsers,
+  handleGetUserByEmail,
   addUserService,
   deleteUserService,
   editUserService,

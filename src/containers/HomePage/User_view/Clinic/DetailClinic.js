@@ -154,7 +154,10 @@ class DetailClinic extends Component {
                 style={{ height: "500px", overflow: "hidden" }}
               >
                 <h2 className="clinic-name">{dataDetailClinic.name}</h2>
-                <div dangerouslySetInnerHTML={{ __html: dataContent }} />
+                <div
+                  dangerouslySetInnerHTML={{ __html: dataContent }}
+                  className="content-html"
+                />
                 <div
                   className="view-more"
                   onClick={() => this.handleShowContent()}

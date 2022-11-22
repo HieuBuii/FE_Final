@@ -92,6 +92,7 @@ class DetailUser extends Component {
       this.setState({
         previewImg: objectUrl,
         avatar: base64,
+        isChanged: true,
       });
     }
   };
@@ -191,7 +192,7 @@ class DetailUser extends Component {
         positionId: "P0",
         image: this.state.avatar,
       });
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, isChanged: false });
       if (res && res.errCode === 0) {
         toast.success("Lưu thay đổi thành công !!");
         if (this.props.userInfo && this.props.userInfo.id) {
@@ -395,20 +396,22 @@ class DetailUser extends Component {
                     className="user-list-item"
                     onClick={() => this.handleShowContent("info")}
                   >
-                    Thông tin cá nhân
+                    <FormattedMessage id="homeheader.user-info" />
                   </div>
                   <div
                     className="user-list-item"
                     onClick={() => this.handleShowContent("appointment")}
                   >
-                    Trạng thái lịch hẹn
+                    <FormattedMessage id="homeheader.appointments-status" />
                   </div>
                 </div>
               </div>
               <div className="user-content">
                 {isShowInfo === true ? (
                   <>
-                    <div className="content-title">Thông tin của tôi</div>
+                    <div className="content-title">
+                      <FormattedMessage id="homeheader.user-info" />
+                    </div>
                     <form className="row g-3 mt-5">
                       <div className="col-md-4">
                         <label className="form-label">
@@ -549,16 +552,28 @@ class DetailUser extends Component {
 
                 {isShowAppointment === true ? (
                   <>
-                    <div className="content-title">Trạng thái lịch hẹn</div>
+                    <div className="content-title">
+                      <FormattedMessage id="homeheader.appointments-status" />
+                    </div>
                     <div className="users-container container my-5">
                       <table id="customers">
                         <thead>
                           <tr>
-                            <th>Ngày</th>
-                            <th>Thời gian</th>
-                            <th>Bác sĩ</th>
-                            <th>Trạng thái</th>
-                            <th>Tuỳ chọn</th>
+                            <th>
+                              <FormattedMessage id="homeheader.date" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="homeheader.time" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="homeheader.doctor" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="homeheader.status" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="homeheader.options" />
+                            </th>
                           </tr>
                         </thead>
 
@@ -592,7 +607,7 @@ class DetailUser extends Component {
                                           this.handleSelectedAppointment(item)
                                         }
                                       >
-                                        Xem chi tiết
+                                        <FormattedMessage id="homeheader.view-detail" />
                                       </button>
                                       {item.statusId === "S3" &&
                                         showBtn === true && (
@@ -602,7 +617,7 @@ class DetailUser extends Component {
                                               this.handleRating(item)
                                             }
                                           >
-                                            Đánh giá
+                                            <FormattedMessage id="homeheader.rating" />
                                           </button>
                                         )}
                                       {item.statusId === "S1" &&
@@ -613,7 +628,7 @@ class DetailUser extends Component {
                                               this.handleCancelAppointment(item)
                                             }
                                           >
-                                            Huỷ
+                                            <FormattedMessage id="homeheader.cancel" />
                                           </button>
                                         )}
                                     </div>
@@ -703,7 +718,7 @@ class DetailUser extends Component {
               <div className="modal-schedule-container">
                 <div className="modal-header">
                   <span>
-                    <FormattedMessage id="user-view.booking-modal.info-booking" />
+                    <FormattedMessage id="homeheader.rating" />
                   </span>
                   <span>
                     <i
@@ -731,7 +746,9 @@ class DetailUser extends Component {
                         : `Address: ${selectedAppointment.bookingDoctorData.Doctor_Info.doctorClinicData.address}`}
                     </div>
                     <div className="col-12 my-2">
-                      <label>Nhận xét</label>
+                      <label>
+                        <FormattedMessage id="homeheader.comment" />
+                      </label>
                       <textarea
                         className="form-control"
                         rows={4}
@@ -740,7 +757,7 @@ class DetailUser extends Component {
                     </div>
                     <div className="col-12 my-2">
                       <label className="mr-4" style={{ marginRight: "15px" }}>
-                        Đánh giá:
+                        <FormattedMessage id="homeheader.rating" />
                       </label>
                       <StarRatings
                         rating={this.state.rating}
@@ -756,7 +773,7 @@ class DetailUser extends Component {
                         className="btn btn-primary px-2"
                         onClick={() => this.sendRating()}
                       >
-                        Gửi đánh giá
+                        <FormattedMessage id="homeheader.send-rating" />
                       </button>
                     </div>
                   </div>

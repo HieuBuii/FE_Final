@@ -8,6 +8,7 @@ import { changeLanguageApp } from "../../store/actions";
 import mainLogo from "../../assets/images/Logo.png";
 import { withRouter } from "react-router";
 import SliderNav from "./SliderNav";
+import { push } from "connected-react-router";
 
 class HomeHeader extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class HomeHeader extends Component {
 
   goToHome = () => {
     if (this.props.history) {
-      this.props.history.push(`/home`);
+      this.props.history.push(`/`);
     }
   };
 
@@ -81,10 +82,20 @@ class HomeHeader extends Component {
     });
   };
 
+  redirectToSystemPage = (path) => {
+    const { navigate } = this.props;
+    const redirectPath = path;
+    navigate(`${redirectPath}`);
+  };
+
+  handleLogout = () => {
+    this.props.processLogout();
+    this.redirectToSystemPage("/home");
+  };
+
   render() {
     let language = this.props.language;
     let { login } = this.state;
-    const { processLogout } = this.props;
     return (
       <>
         <SliderNav
@@ -173,16 +184,19 @@ class HomeHeader extends Component {
                           className="list-item"
                           onClick={() => this.handleViewMore("account")}
                         >
-                          Tài khoản của tôi
+                          <FormattedMessage id="homeheader.my-account" />
                         </li>
                         <li
                           className="list-item"
                           onClick={() => this.handleViewMore("password")}
                         >
-                          Đổi mật khẩu
+                          <FormattedMessage id="homeheader.change-password" />
                         </li>
-                        <li className="list-item" onClick={processLogout}>
-                          Đăng xuất
+                        <li
+                          className="list-item"
+                          onClick={() => this.handleLogout()}
+                        >
+                          <FormattedMessage id="homeheader.log-out" />
                         </li>
                       </ul>
                     </span>
@@ -230,6 +244,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    navigate: (path) => dispatch(push(path)),
     changeLanguageAppRedux: (languages) =>
       dispatch(changeLanguageApp(languages)),
     processLogout: () => dispatch(actions.processLogout()),

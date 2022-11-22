@@ -9,7 +9,21 @@
     "fee": "Handbook",
     "check-health": "Medical handbook",
     "support": "Sign in",
-    "welcome": "Welcome, "
+    "welcome": "Welcome, ",
+    "my-account": "My account",
+    "change-password": "Change password",
+    "log-out": "Sign out",
+    "user-info": "Personal information",
+    "appointments-status": "Appointments status",
+    "date": "Date",
+    "time": "Time",
+    "status": "Status",
+    "options": "Options",
+    "view-detail": "View detail",
+    "cancel": "Cancel",
+    "rating": "Rating",
+    "comment": "Comment",
+    "send-rating": "Send rating"
   },
 
   "banner": {

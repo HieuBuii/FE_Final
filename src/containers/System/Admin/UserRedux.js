@@ -3,10 +3,16 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { LENGUAGES, MANAGER_ACTIONS, CommonUtils } from "../../../utils";
 import * as actions from "../../../store/actions";
+import {
+  handleGetUserByEmail,
+  deleteUserService,
+} from "../../../services/userService";
 import "./UserRedux.scss";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import TableManagerUser from "./TableManagerUser";
+import _ from "lodash";
+import { toast } from "react-toastify";
 
 class UserRedux extends Component {
   constructor(props) {
@@ -30,6 +36,8 @@ class UserRedux extends Component {
       avatar: "",
       action: "",
       accessToken: [],
+      userSearch: {},
+      inputSearch: "",
     };
   }
 
@@ -141,17 +149,17 @@ class UserRedux extends Component {
     let isValid = true;
     if (!this.validateEmail(this.state.email)) {
       isValid = false;
-      alert("please fill email address!!");
+      alert("Vui lòng điền địa chỉ Email hợp lệ!!");
       return;
     } else if (!this.validatePassword(this.state.password)) {
       isValid = false;
       alert(
-        "Password must be atleast: 6 Character, 1 UpperCase, 1 LowerCase and 1 Number !!"
+        "Mật khẩu phải dài ít nhất 6 ký tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường và 1 số !!"
       );
       return;
     } else if (!this.validatePhone(this.state.phonenumber)) {
       isValid = false;
-      alert("Please fill exactly your phone number !!");
+      alert("Vui lòng điền số điện thoại hợp lệ !!");
       return;
     } else {
       let arr = ["firstName", "lastName", "address"];
@@ -234,6 +242,65 @@ class UserRedux extends Component {
     });
   };
 
+  handleChangeSearch = (e) => {
+    this.setState({ inputSearch: e.target.value });
+  };
+
+  handleSearch = async () => {
+    let { accessToken } = this.state;
+    let input = this.state.inputSearch;
+    if (!this.validateEmail(input)) {
+      alert("Vui lòng điền địa chỉ Email hợp lệ!!");
+      return;
+    } else if (this.validateEmail(input)) {
+      let res = await handleGetUserByEmail(input, accessToken);
+      if (res && res.errCode === 0) {
+        this.setState({ userSearch: res.data, inputSearch: "" });
+      } else {
+        toast.error("Người dùng không tồn tại !!");
+      }
+    }
+  };
+
+  handleDeleteUser = async (user) => {
+    let token = this.state.accessToken;
+    let res = await deleteUserService(user.id, token);
+    if (res && res.errCode === 0) {
+      toast.success("Xoá người dùng thành công !!");
+      this.setState({ userSearch: {} });
+    } else {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại !!");
+    }
+  };
+
+  handleEditUser = async (user) => {
+    let imgBase64 = "";
+    if (user.image) {
+      imgBase64 = Buffer.from(user.image, "base64").toString("binary");
+    }
+
+    this.setState({
+      id: user.id,
+      email: user.email,
+      password: "Pass1234",
+      firstName: user.firstName,
+      lastName: user.lastName,
+      address: user.address,
+      phonenumber: user.phonenumber,
+      gender: user.gender,
+      position: user.positionId,
+      role: user.roleId,
+      avatar: " ",
+      previewImg: imgBase64,
+      action: MANAGER_ACTIONS.EDIT,
+      userSearch: {},
+    });
+  };
+
+  handleCloseTableSearch = () => {
+    this.setState({ userSearch: {} });
+  };
+
   render() {
     let { genderArr, positionArr, roleArr } = this.state;
     let language = this.props.language;
@@ -249,6 +316,7 @@ class UserRedux extends Component {
       position,
       role,
       action,
+      userSearch,
     } = this.state;
     return (
       <div className="manage-container">
@@ -437,6 +505,68 @@ class UserRedux extends Component {
             onCloseRequest={() => this.setState({ isOpen: false })}
           />
         )}
+        <div className="container mt-5">
+          <div className="col-12">
+            <label>Tìm người dùng:</label>
+            <input
+              className="form-search"
+              placeholder="Nhập vào email"
+              value={this.state.inputSearch}
+              onChange={(e) => this.handleChangeSearch(e)}
+            />
+            <button className="btn-search" onClick={() => this.handleSearch()}>
+              <i className="fas fa-search"></i>
+            </button>
+            {userSearch && !_.isEmpty(userSearch) && (
+              <table id="customers" className="table-search">
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Phonenumber</th>
+                    <th>Options</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {
+                    <tr>
+                      <td>{userSearch.email}</td>
+                      <td>{userSearch.firstName}</td>
+                      <td>{userSearch.lastName}</td>
+                      <td>{userSearch.address}</td>
+                      <td>{userSearch.phonenumber}</td>
+                      <td>
+                        <div>
+                          <button
+                            className="btn btn-edit"
+                            onClick={() => this.handleEditUser(userSearch)}
+                          >
+                            <i className="fas fa-pencil-alt"></i>
+                          </button>
+                          <button
+                            className="btn btn-delete"
+                            onClick={() => this.handleDeleteUser(userSearch)}
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+                <div
+                  className="close-table"
+                  onClick={() => this.handleCloseTableSearch()}
+                >
+                  <i className="fas fa-times"></i>
+                </div>
+              </table>
+            )}
+          </div>
+        </div>
         <TableManagerUser editToParent={this.editToParent} />
       </div>
     );

@@ -9,7 +9,21 @@
     "fee": "Cẩm nang",
     "check-health": "Cẩm nang y tế",
     "support": "Đăng nhập",
-    "welcome": "Xin chào, "
+    "welcome": "Xin chào, ",
+    "my-account": "Tài khoản của tôi",
+    "change-password": "Đổi mật khẩu",
+    "log-out": "Đăng xuất",
+    "user-info": "Thông tin cá nhân",
+    "appointments-status": "Trạng thái lịch hẹn",
+    "date": "Ngày",
+    "time": "Thời gian",
+    "status": "Trạng thái",
+    "options": "Tuỳ chọn",
+    "view-detail": "Xem chi tiết",
+    "cancel": "Huỷ",
+    "rating": "Đánh giá",
+    "comment": "Nhận xét",
+    "send-rating": "Gửi đánh giá"
   },
 
   "banner": {
