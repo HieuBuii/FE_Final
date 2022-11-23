@@ -40,6 +40,12 @@ class ChangePassword extends Component {
     }
   };
 
+  handleCancel = () => {
+    if (this.props.history) {
+      this.props.history.push(`/`);
+    }
+  };
+
   handleShowHidePassword = () => {
     this.setState({
       isShowPassword: !this.state.isShowPassword,
@@ -181,6 +187,14 @@ class ChangePassword extends Component {
                     onClick={() => this.handleChangePassword()}
                   >
                     Đổi mật khẩu
+                  </button>
+                </div>
+                <div className="col-12">
+                  <button
+                    className="btn-login btn-cancel-change"
+                    onClick={() => this.handleCancel()}
+                  >
+                    Huỷ
                   </button>
                 </div>
               </div>

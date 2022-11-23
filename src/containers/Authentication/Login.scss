@@ -67,33 +67,11 @@
         margin-top: 15px;
         display: inline-block;
       }
-      .login-social {
-        margin-top: 15px;
-        text-align: center;
-        .login-other {
-          margin-bottom: 15px;
-          font-size: 16px;
-          font-weight: 600;
-        }
-        .facebook,
-        .google {
-          font-size: 30px;
-          width: 50px;
-          height: 50px;
-          margin: 0 10px;
-          border-radius: 50%;
-          text-align: center;
-          line-height: 50px;
-          color: #fff;
-          cursor: pointer;
-        }
-        .facebook {
-          background-color: #0d71e4;
-        }
-        .google {
-          background-color: crimson;
-        }
-      }
     }
   }
+}
+
+.btn-cancel-change {
+  background: unset !important;
+  background-color: rgb(255, 73, 73) !important;
 }

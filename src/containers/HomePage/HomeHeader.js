@@ -9,11 +9,17 @@ import mainLogo from "../../assets/images/Logo.png";
 import { withRouter } from "react-router";
 import SliderNav from "./SliderNav";
 import { push } from "connected-react-router";
+import _ from "lodash";
 
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
-    this.state = { isShowNavBar: false, userInfo: "", login: false };
+    this.state = {
+      isShowNavBar: false,
+      userInfo: "",
+      login: false,
+      roleId: "",
+    };
   }
   changeLanguage = (language) => {
     this.props.changeLanguageAppRedux(language);
@@ -26,6 +32,7 @@ class HomeHeader extends Component {
     if (this.props.userInfo) {
       this.setState({
         userInfo: this.props.userInfo,
+        roleId: this.props.userInfo.roleId,
       });
     }
   }
@@ -36,11 +43,38 @@ class HomeHeader extends Component {
         login: this.props.isLoggedIn,
       });
     }
+    if (this.props.userInfo && !_.isEmpty(this.props.userInfo)) {
+      if (this.props.userInfo !== prevProps.userInfo) {
+        this.setState({
+          userInfo: this.props.userInfo,
+          roleId: this.props.userInfo.roleId,
+        });
+      }
+    }
   }
 
   goToHome = () => {
     if (this.props.history) {
       this.props.history.push(`/`);
+    }
+  };
+
+  redirectToSystemPage = (path) => {
+    const { navigate } = this.props;
+    const redirectPath = path;
+    navigate(`${redirectPath}`);
+  };
+
+  goToManage = () => {
+    let role = this.state.roleId;
+    if (role) {
+      if (role === "R1") {
+        this.redirectToSystemPage("/system/user-redux");
+      } else if (role === "R2") {
+        this.redirectToSystemPage("/doctor/manage-schedule");
+      } else if (role === "R3") {
+        this.redirectToSystemPage("/");
+      }
     }
   };
 
@@ -96,6 +130,7 @@ class HomeHeader extends Component {
   render() {
     let language = this.props.language;
     let { login } = this.state;
+    let { roleId } = this.state;
     return (
       <>
         <SliderNav
@@ -186,6 +221,22 @@ class HomeHeader extends Component {
                         >
                           <FormattedMessage id="homeheader.my-account" />
                         </li>
+                        {roleId === "R1" && (
+                          <li
+                            className="list-item"
+                            onClick={() => this.goToManage()}
+                          >
+                            <FormattedMessage id="homeheader.go-manage" />
+                          </li>
+                        )}
+                        {roleId === "R2" && (
+                          <li
+                            className="list-item"
+                            onClick={() => this.goToManage()}
+                          >
+                            <FormattedMessage id="homeheader.go-manage" />
+                          </li>
+                        )}
                         <li
                           className="list-item"
                           onClick={() => this.handleViewMore("password")}

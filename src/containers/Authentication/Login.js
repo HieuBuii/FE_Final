@@ -62,14 +62,15 @@ class Login extends Component {
       }
       this.setState({ isLoading: false });
       if (data && data.errCode === 0) {
-        let role = data.user.roleId;
-        if (role === "R1") {
-          this.redirectToSystemPage("/system/user-redux");
-        } else if (role === "R2") {
-          this.redirectToSystemPage("/doctor/manage-schedule");
-        } else if (role === "R3") {
-          this.redirectToSystemPage("/");
-        }
+        // let role = data.user.roleId;
+        this.redirectToSystemPage("/");
+        // if (role === "R1") {
+        //   this.redirectToSystemPage("/system/user-redux");
+        // } else if (role === "R2") {
+        //   this.redirectToSystemPage("/doctor/manage-schedule");
+        // } else if (role === "R3") {
+        //   this.redirectToSystemPage("/");
+        // }
         this.props.userLoginSuccess(data.user);
       }
     } catch (e) {
@@ -104,7 +105,7 @@ class Login extends Component {
           "Gửi yêu cầu thành công, vui lòng kiểm tra hộp thư Email để tiếp tục !!"
         );
       } else {
-        toast.error("Địa chỉ email không đúng, vui lòng thử lại !!");
+        toast.error("Người dùng không tồn tại, vui lòng thử lại !!");
       }
     }
   };
@@ -115,24 +116,24 @@ class Login extends Component {
         <div className="login-background">
           <div className="login-container">
             <div className="login-content row">
-              <div className="col-12 login-title">LOGIN</div>
+              <div className="col-12 login-title">Đăng nhập</div>
               <div className="col-12 form-group login-input">
-                <label className="login-label">Username:</label>
+                <label className="login-label">Email:</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Enter Your Username"
+                  placeholder="Nhập địa chỉ email"
                   onChange={(e) => this.handleInputUsername(e)}
                   onKeyDown={(e) => this.handleEnterPress(e)}
                 />
               </div>
               <div className="col-12 form-group login-input">
-                <label className="login-label">Password:</label>
+                <label className="login-label">Mật khẩu:</label>
                 <div className="login-password">
                   <input
                     type={this.state.isShowPassword ? "text" : "password"}
                     className="form-control"
-                    placeholder="Enter Your Password"
+                    placeholder="Nhập mật khẩu"
                     onChange={(e) => this.handleInputPassword(e)}
                     onKeyDown={(e) => this.handleEnterPress(e)}
                   />
@@ -158,20 +159,20 @@ class Login extends Component {
                   className="btn-login"
                   onClick={() => this.handleLogin()}
                 >
-                  Login
+                  Đăng nhập
                 </button>
               </div>
               <div
                 className="col-12 login-sign-up mt-4"
                 onClick={() => this.goToSignUp()}
               >
-                Don't have an account? <span>Sign up</span>
+                Bạn chưa có tài khoản? <span>Đăng ký</span>
               </div>
               <div
                 className="col-12 login-forgot"
                 onClick={() => this.handleForgotPW()}
               >
-                Forgot Your Password ?
+                Quên mật khẩu ?
               </div>
             </div>
           </div>
