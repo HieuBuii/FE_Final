@@ -6,6 +6,7 @@ import { CommonUtils } from "../../../utils";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import { toast } from "react-toastify";
+import { Modal } from "reactstrap";
 import {
   saveHandBookService,
   getAllHandBook,
@@ -31,6 +32,8 @@ class ManageHandBook extends Component {
       idHandBook: "",
       statusSubmit: "ADD",
       isLoading: false,
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -43,7 +46,18 @@ class ManageHandBook extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleAddImg = async (e) => {
     let data = e.target.files;
@@ -184,7 +198,8 @@ class ManageHandBook extends Component {
     });
   };
 
-  handleDeleteClinic = async (item) => {
+  handleDeleteClinic = async () => {
+    let item = this.state.itemSelected;
     if (item && !_.isEmpty(item)) {
       this.handleShowLoading(true);
       let res = await deleteHandBookService(item.id);
@@ -206,12 +221,33 @@ class ManageHandBook extends Component {
         contentHTML: "",
         contentMarkdown: "",
         statusSubmit: "ADD",
+        isShowModalBooking: false,
       });
     }
   };
 
+  handleCancel = () => {
+    this.setState({
+      name: "",
+      image: "",
+      author: "",
+      previewImg: "",
+      contentHTML: "",
+      contentMarkdown: "",
+    });
+  };
+
   render() {
-    let { listHandBook } = this.state;
+    let {
+      isShowModalBooking,
+      listHandBook,
+      name,
+      image,
+      author,
+      previewImg,
+      contentHTML,
+      contentMarkdown,
+    } = this.state;
     let file = this.state.previewImg;
     return (
       <>
@@ -289,6 +325,20 @@ class ManageHandBook extends Component {
                   >
                     <FormattedMessage id="manage-specialty.save" />
                   </button>
+                  {(name ||
+                    image ||
+                    author ||
+                    previewImg ||
+                    contentHTML ||
+                    contentMarkdown) && (
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-cancel"
+                      onClick={(e) => this.handleCancel(e)}
+                    >
+                      Huỷ
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
@@ -331,7 +381,7 @@ class ManageHandBook extends Component {
                             </button>
                             <button
                               className="btn btn-delete"
-                              onClick={() => this.handleDeleteClinic(item)}
+                              onClick={() => this.showModalBooking(item)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
@@ -343,6 +393,41 @@ class ManageHandBook extends Component {
               </tbody>
             </table>
           </div>
+          <Modal
+            isOpen={isShowModalBooking}
+            className={"schedule-modal"}
+            size="md"
+          >
+            <div className="modal-schedule-container">
+              <div className="modal-header">
+                <span>
+                  <i
+                    className="fas fa-times"
+                    onClick={() => this.closeModalBooking()}
+                  ></i>
+                </span>
+              </div>
+              <div className="modal-body">
+                <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                  Bạn muốn xoá bài đăng ?
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-confirm"
+                  onClick={() => this.handleDeleteClinic()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.confirm" />
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => this.closeModalBooking()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.cancel" />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </LoadingOverlay>
       </>
     );

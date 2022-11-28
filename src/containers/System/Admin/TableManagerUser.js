@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import * as actions from "../../../store/actions";
+import { FormattedMessage } from "react-intl";
 
 import "react-markdown-editor-lite/lib/index.css";
 
@@ -9,6 +11,8 @@ class TableManageUser extends Component {
     super(props);
     this.state = {
       listUsers: [],
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -29,11 +33,26 @@ class TableManageUser extends Component {
     }
   }
 
-  handleDeleteUser(user) {
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
+
+  handleDeleteUser() {
+    let user = this.state.itemSelected;
     if (this.props.userInfo && this.props.userInfo.accessToken) {
       let accessToken = this.props.userInfo.accessToken;
       if (this.props.userInfo) {
         this.props.deleteUserRedux(user.id, accessToken);
+        this.setState({ isShowModalBooking: false });
       }
     }
   }
@@ -44,6 +63,7 @@ class TableManageUser extends Component {
 
   render() {
     let users = this.state.listUsers;
+    let isShowModalBooking = this.state.isShowModalBooking;
     return (
       <>
         <div className="users-container container my-5">
@@ -78,7 +98,7 @@ class TableManageUser extends Component {
                         </button>
                         <button
                           className="btn btn-delete"
-                          onClick={() => this.handleDeleteUser(item)}
+                          onClick={() => this.showModalBooking(item)}
                         >
                           <i className="fas fa-trash"></i>
                         </button>
@@ -90,6 +110,41 @@ class TableManageUser extends Component {
             </tbody>
           </table>
         </div>
+        <Modal
+          isOpen={isShowModalBooking}
+          className={"schedule-modal"}
+          size="md"
+        >
+          <div className="modal-schedule-container">
+            <div className="modal-header">
+              <span>
+                <i
+                  className="fas fa-times"
+                  onClick={() => this.closeModalBooking()}
+                ></i>
+              </span>
+            </div>
+            <div className="modal-body">
+              <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                Bạn muốn xoá phòng khám ?
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn-confirm"
+                onClick={() => this.handleDeleteUser()}
+              >
+                <FormattedMessage id="user-view.booking-modal.confirm" />
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => this.closeModalBooking()}
+              >
+                <FormattedMessage id="user-view.booking-modal.cancel" />
+              </button>
+            </div>
+          </div>
+        </Modal>
       </>
     );
   }

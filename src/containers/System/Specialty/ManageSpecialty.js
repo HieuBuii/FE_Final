@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import "./ManageSpecialty.scss";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
@@ -33,6 +34,8 @@ class ManageSpecialty extends Component {
       statusSubmit: "ADD",
       token: "",
       isLoading: false,
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -48,7 +51,18 @@ class ManageSpecialty extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleShowLoading = (boolean) => {
     this.setState({
@@ -191,7 +205,8 @@ class ManageSpecialty extends Component {
     });
   };
 
-  handleDeleteSpecialty = async (item) => {
+  handleDeleteSpecialty = async () => {
+    let item = this.state.itemSelected;
     if (item && !_.isEmpty(item)) {
       this.handleShowLoading(true);
       let res = await deleteSpecialtyService(item.id);
@@ -200,6 +215,9 @@ class ManageSpecialty extends Component {
         toast.success(
           <FormattedMessage id="manage-specialty.delete-succeed" />
         );
+        this.setState({
+          isShowModalBooking: false,
+        });
       } else {
         toast.error(<FormattedMessage id="manage-specialty.delete-failed" />);
       }
@@ -212,8 +230,28 @@ class ManageSpecialty extends Component {
     }
   };
 
+  handleCancel = () => {
+    this.setState({
+      nameVi: "",
+      nameEn: "",
+      image: "",
+      previewImg: "",
+      contentHTML: "",
+      contentMarkdown: "",
+    });
+  };
+
   render() {
-    let { listSpecialty } = this.state;
+    let {
+      listSpecialty,
+      nameVi,
+      nameEn,
+      image,
+      previewImg,
+      contentHTML,
+      contentMarkdown,
+      isShowModalBooking,
+    } = this.state;
     let file = this.state.previewImg;
     return (
       <>
@@ -291,6 +329,20 @@ class ManageSpecialty extends Component {
                   >
                     <FormattedMessage id="manage-specialty.save" />
                   </button>
+                  {(nameVi ||
+                    nameEn ||
+                    image ||
+                    previewImg ||
+                    contentHTML ||
+                    contentMarkdown) && (
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-cancel"
+                      onClick={(e) => this.handleCancel(e)}
+                    >
+                      Huỷ
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
@@ -333,7 +385,7 @@ class ManageSpecialty extends Component {
                             </button>
                             <button
                               className="btn btn-delete"
-                              onClick={() => this.handleDeleteSpecialty(item)}
+                              onClick={() => this.showModalBooking(item)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
@@ -345,6 +397,41 @@ class ManageSpecialty extends Component {
               </tbody>
             </table>
           </div>
+          <Modal
+            isOpen={isShowModalBooking}
+            className={"schedule-modal"}
+            size="lg"
+          >
+            <div className="modal-schedule-container">
+              <div className="modal-header">
+                <span>
+                  <i
+                    className="fas fa-times"
+                    onClick={() => this.closeModalBooking()}
+                  ></i>
+                </span>
+              </div>
+              <div className="modal-body">
+                <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                  Bạn muốn xoá chuyên khoa ?
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-confirm"
+                  onClick={() => this.handleDeleteSpecialty()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.confirm" />
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => this.closeModalBooking()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.cancel" />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </LoadingOverlay>
       </>
     );

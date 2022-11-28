@@ -54,6 +54,8 @@ class DetailUser extends Component {
       patientId: "",
       bookingId: "",
       showBtn: true,
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -82,6 +84,19 @@ class DetailUser extends Component {
       }
     }
   }
+
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleAddImg = async (e) => {
     let data = e.target.files;
@@ -323,7 +338,8 @@ class DetailUser extends Component {
     }
   };
 
-  handleCancelAppointment = async (item) => {
+  handleCancelAppointment = async () => {
+    let item = this.state.itemSelected;
     this.setState({
       isLoading: true,
     });
@@ -339,6 +355,7 @@ class DetailUser extends Component {
     });
     if (res && res.errCode === 0) {
       toast.success("Huỷ lịch hẹn thành công !!");
+      this.setState({ isShowModalBooking: false });
       if (this.props.userInfo && this.props.userInfo.id) {
         let id = this.props.userInfo.id;
         let appoinment = await getPatientAppointmentService(id);
@@ -354,7 +371,7 @@ class DetailUser extends Component {
   };
 
   render() {
-    let { genderArr } = this.state;
+    let { genderArr, isShowModalBooking } = this.state;
     let language = this.props.language;
     let file = this.state.previewImg;
     let {
@@ -625,7 +642,7 @@ class DetailUser extends Component {
                                           <button
                                             className="btn btn-danger px-2"
                                             onClick={() =>
-                                              this.handleCancelAppointment(item)
+                                              this.showModalBooking(item)
                                             }
                                           >
                                             <FormattedMessage id="homeheader.cancel" />
@@ -781,6 +798,41 @@ class DetailUser extends Component {
               </div>
             </Modal>
           )}
+          <Modal
+            isOpen={isShowModalBooking}
+            className={"schedule-modal"}
+            size="md"
+          >
+            <div className="modal-schedule-container">
+              <div className="modal-header">
+                <span>
+                  <i
+                    className="fas fa-times"
+                    onClick={() => this.closeModalBooking()}
+                  ></i>
+                </span>
+              </div>
+              <div className="modal-body">
+                <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                  Bạn muốn huỷ lịch hẹn ?
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-confirm"
+                  onClick={() => this.handleCancelAppointment()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.confirm" />
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => this.closeModalBooking()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.cancel" />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </LoadingOverlay>
       </>
     );

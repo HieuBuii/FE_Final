@@ -88,12 +88,12 @@ class ModalSendEmail extends Component {
   validInput = () => {
     let isValid = true;
     if (!this.validateEmail(this.state.email)) {
-      alert("please fill email address!!");
+      alert("Vui lòng điền địa chỉ email hợp lệ!!");
       return;
     } else {
       if (!this.state.email) {
         isValid = false;
-        alert(`Missing email`);
+        alert(`Vui lòng nhập địa chỉ email`);
       }
     }
     return isValid;

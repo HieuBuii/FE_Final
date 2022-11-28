@@ -55,7 +55,7 @@ class ModalEditUser extends Component {
   validInput = () => {
     let isValid = true;
     if (!this.validateEmail(this.state.email)) {
-      alert("please fill email address!!");
+      alert("Vui lòng nhập địa chỉ Email hợp lệ!!");
       return;
     } else {
       let arr = [

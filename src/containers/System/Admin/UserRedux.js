@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import { LENGUAGES, MANAGER_ACTIONS, CommonUtils } from "../../../utils";
 import * as actions from "../../../store/actions";
 import {
@@ -38,6 +39,8 @@ class UserRedux extends Component {
       accessToken: [],
       userSearch: {},
       inputSearch: "",
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -94,10 +97,23 @@ class UserRedux extends Component {
         role: arrRole && arrRole.length > 0 ? arrRole[0].keyMap : "",
         avatar: "",
         previewImg: "",
-        actions: MANAGER_ACTIONS.CREATE,
+        action: MANAGER_ACTIONS.CREATE,
       });
     }
   }
+
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleAddImg = async (e) => {
     let data = e.target.files;
@@ -262,12 +278,13 @@ class UserRedux extends Component {
     }
   };
 
-  handleDeleteUser = async (user) => {
+  handleDeleteUser = async () => {
+    let user = this.state.itemSelected;
     let token = this.state.accessToken;
     let res = await deleteUserService(user.id, token);
     if (res && res.errCode === 0) {
       toast.success("Xoá người dùng thành công !!");
-      this.setState({ userSearch: {} });
+      this.setState({ userSearch: {}, isShowModalBooking: false });
     } else {
       toast.error("Có lỗi xảy ra, vui lòng thử lại !!");
     }
@@ -301,6 +318,32 @@ class UserRedux extends Component {
     this.setState({ userSearch: {} });
   };
 
+  handleCancel = () => {
+    let arrGender = [];
+    let arrPosition = [];
+    let arrRole = [];
+    if (this.props) {
+      arrGender = this.props.gender;
+      arrPosition = this.props.position;
+      arrRole = this.props.role;
+    }
+    this.setState({
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      address: "",
+      phonenumber: "",
+      gender: arrGender && arrGender.length > 0 ? arrGender[0].keyMap : "",
+      position:
+        arrPosition && arrPosition.length > 0 ? arrPosition[0].keyMap : "",
+      role: arrRole && arrRole.length > 0 ? arrRole[0].keyMap : "",
+      avatar: "",
+      previewImg: "",
+      action: MANAGER_ACTIONS.CREATE,
+    });
+  };
+
   render() {
     let { genderArr, positionArr, roleArr } = this.state;
     let language = this.props.language;
@@ -317,6 +360,7 @@ class UserRedux extends Component {
       role,
       action,
       userSearch,
+      isShowModalBooking,
     } = this.state;
     return (
       <div className="manage-container">
@@ -496,6 +540,21 @@ class UserRedux extends Component {
                   <FormattedMessage id="manage-user.save" />
                 )}
               </button>
+              {(email ||
+                password ||
+                firstName ||
+                lastName ||
+                address ||
+                this.state.previewImg ||
+                phonenumber) && (
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-cancel"
+                  onClick={(e) => this.handleCancel(e)}
+                >
+                  Huỷ
+                </button>
+              )}
             </div>
           </form>
         </div>
@@ -548,7 +607,7 @@ class UserRedux extends Component {
                           </button>
                           <button
                             className="btn btn-delete"
-                            onClick={() => this.handleDeleteUser(userSearch)}
+                            onClick={() => this.showModalBooking(userSearch)}
                           >
                             <i className="fas fa-trash"></i>
                           </button>
@@ -568,6 +627,41 @@ class UserRedux extends Component {
           </div>
         </div>
         <TableManagerUser editToParent={this.editToParent} />
+        <Modal
+          isOpen={isShowModalBooking}
+          className={"schedule-modal"}
+          size="md"
+        >
+          <div className="modal-schedule-container">
+            <div className="modal-header">
+              <span>
+                <i
+                  className="fas fa-times"
+                  onClick={() => this.closeModalBooking()}
+                ></i>
+              </span>
+            </div>
+            <div className="modal-body">
+              <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                Bạn muốn xoá người dùng ?
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn-confirm"
+                onClick={() => this.handleDeleteUser()}
+              >
+                <FormattedMessage id="user-view.booking-modal.confirm" />
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => this.closeModalBooking()}
+              >
+                <FormattedMessage id="user-view.booking-modal.cancel" />
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }

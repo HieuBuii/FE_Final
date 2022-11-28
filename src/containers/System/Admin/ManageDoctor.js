@@ -315,9 +315,34 @@ class ManageDoctor extends Component {
     }
   };
 
+  handleCancel = () => {
+    this.setState({
+      contentHTML: "",
+      contentMarkdown: "",
+      doctorDesc: "",
+      selectedPrice: "",
+      selectedPayment: "",
+      selectedProvice: "",
+      note: "",
+      selectedDoctor: "",
+      selectedClinic: "",
+      selectedSpecialty: "",
+    });
+  };
+
   render() {
-    const { selectedDoctor, selectedPayment, selectedPrice, selectedProvice } =
-      this.state;
+    const {
+      selectedDoctor,
+      selectedPayment,
+      selectedPrice,
+      selectedProvice,
+      selectedClinic,
+      selectedSpecialty,
+      contentHTML,
+      contentMarkdown,
+      doctorDesc,
+      note,
+    } = this.state;
     return (
       <LoadingOverlay active={this.state.isLoading} spinner text="Loading...">
         <div className="container">
@@ -426,28 +451,6 @@ class ManageDoctor extends Component {
               />
             </div>
 
-            {/* <div className="col-4 form-group my-4">
-            <label>
-              <FormattedMessage id="admin.manage-doctor.name-clinic" />
-            </label>
-            <input
-              className="form-control"
-              onChange={(e) => this.handleChangeInput(e, "nameClinic")}
-              value={this.state.nameClinic}
-            />
-          </div>
-
-          <div className="col-4 form-group my-4">
-            <label>
-              <FormattedMessage id="admin.manage-doctor.address-clinic" />
-            </label>
-            <input
-              className="form-control"
-              onChange={(e) => this.handleChangeInput(e, "addressClinic")}
-              value={this.state.addressClinic}
-            />
-          </div> */}
-
             <div className="col-4 form-group my-4">
               <label>
                 <FormattedMessage id="admin.manage-doctor.note" />
@@ -483,6 +486,24 @@ class ManageDoctor extends Component {
               <FormattedMessage id="admin.manage-doctor.save" />
             )}
           </button>
+          {(contentHTML ||
+            contentMarkdown ||
+            doctorDesc ||
+            note ||
+            selectedPrice ||
+            selectedPayment ||
+            selectedProvice ||
+            selectedDoctor ||
+            selectedClinic ||
+            selectedSpecialty) && (
+            <button
+              type="submit"
+              className="btn btn-primary btn-cancel"
+              onClick={(e) => this.handleCancel(e)}
+            >
+              Huỷ
+            </button>
+          )}
         </div>
       </LoadingOverlay>
     );

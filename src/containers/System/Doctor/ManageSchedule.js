@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import { FormattedMessage } from "react-intl";
 import { LENGUAGES } from "../../../utils";
 import * as actions from "../../../store/actions";
@@ -26,7 +27,8 @@ class ManageSchedule extends Component {
       rangeTime: [],
       dataTime: [],
       isLoading: false,
-      // maxPatient: "1",
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -60,6 +62,19 @@ class ManageSchedule extends Component {
       });
     }
   }
+
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   buildDataForSelect = (inputData) => {
     let listOptions = [];
@@ -142,13 +157,13 @@ class ManageSchedule extends Component {
 
     if (role === "R1") {
       if (selectedDoctor && _.isEmpty(selectedDoctor)) {
-        toast.error("Select Doctor !!");
+        toast.error("Vui lòng chọn bác sĩ !!");
         return;
       }
     }
 
     if (!currentDate) {
-      toast.error("Select Date !!");
+      toast.error("Vui lòng chọn ngày !!");
       return;
     }
 
@@ -165,7 +180,7 @@ class ManageSchedule extends Component {
           return result.push(obj);
         });
       } else {
-        toast.error("Select Time !!");
+        toast.error("Vui lòng chọn thời gian !!");
         return;
       }
     }
@@ -177,7 +192,7 @@ class ManageSchedule extends Component {
     });
     this.handleShowLoading(false);
     if (res && res.errCode === 0) {
-      toast.success("Save Schedule Success !!");
+      toast.success("Lưu lịch khám thành công !!");
       let { selectedDoctor, currentDate } = this.state;
       if (selectedDoctor && currentDate) {
         let res = await getScheduleDoctorService(
@@ -191,7 +206,7 @@ class ManageSchedule extends Component {
         }
       }
     } else {
-      toast.error("Save Schedule Failed!!");
+      toast.error("Lưu lịch khám thất bại, vui lòng thử lại!!");
     }
   };
 
@@ -199,7 +214,8 @@ class ManageSchedule extends Component {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  handleDeleteSchedule = async (item) => {
+  handleDeleteSchedule = async () => {
+    let item = this.state.itemSelected;
     let role = "",
       id = "";
     if (
@@ -215,6 +231,9 @@ class ManageSchedule extends Component {
     this.handleShowLoading(false);
     if (res && res.errCode === 0) {
       toast.success("Delete Schedule Succeed !!");
+      this.setState({
+        isShowModalBooking: false,
+      });
     } else {
       toast.error("Delete Schedule failed");
     }
@@ -243,7 +262,7 @@ class ManageSchedule extends Component {
     if (this.props.userInfo && this.props.userInfo.roleId) {
       role = this.props.userInfo.roleId;
     }
-    let { rangeTime, timeData } = this.state;
+    let { rangeTime, timeData, isShowModalBooking } = this.state;
     let { language } = this.props;
     return (
       <LoadingOverlay active={this.state.isLoading} spinner text="Loading...">
@@ -353,7 +372,7 @@ class ManageSchedule extends Component {
                           <div>
                             <button
                               className="btn btn-delete"
-                              onClick={() => this.handleDeleteSchedule(item)}
+                              onClick={() => this.showModalBooking(item)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
@@ -366,6 +385,41 @@ class ManageSchedule extends Component {
             </table>
           </div>
         </div>
+        <Modal
+          isOpen={isShowModalBooking}
+          className={"schedule-modal"}
+          size="md"
+        >
+          <div className="modal-schedule-container">
+            <div className="modal-header">
+              <span>
+                <i
+                  className="fas fa-times"
+                  onClick={() => this.closeModalBooking()}
+                ></i>
+              </span>
+            </div>
+            <div className="modal-body">
+              <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                Bạn muốn huỷ lịch khám ?
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn-confirm"
+                onClick={() => this.handleDeleteSchedule()}
+              >
+                <FormattedMessage id="user-view.booking-modal.confirm" />
+              </button>
+              <button
+                className="btn-cancel"
+                onClick={() => this.closeModalBooking()}
+              >
+                <FormattedMessage id="user-view.booking-modal.cancel" />
+              </button>
+            </div>
+          </div>
+        </Modal>
       </LoadingOverlay>
     );
   }

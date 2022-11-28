@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import "./ManageClinic.scss";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
@@ -33,6 +34,8 @@ class ManageClinic extends Component {
       statusSubmit: "ADD",
       token: "",
       isLoading: false,
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -48,7 +51,18 @@ class ManageClinic extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleAddImg = async (e) => {
     let data = e.target.files;
@@ -185,13 +199,15 @@ class ManageClinic extends Component {
     });
   };
 
-  handleDeleteClinic = async (item) => {
+  handleDeleteClinic = async () => {
+    let item = this.state.itemSelected;
     if (item && !_.isEmpty(item)) {
       this.handleShowLoading(true);
       let res = await deleteClinicService(item.id);
       this.handleShowLoading(false);
       if (res && res.errCode === 0) {
         toast.success(<FormattedMessage id="manage-clinic.delete-succeed" />);
+        this.setState({ isShowModalBooking: false });
       } else {
         toast.error(<FormattedMessage id="manage-clinic.delete-failed" />);
       }
@@ -210,8 +226,28 @@ class ManageClinic extends Component {
     });
   };
 
+  handleCancel = () => {
+    this.setState({
+      name: "",
+      address: "",
+      image: "",
+      previewImg: "",
+      contentHTML: "",
+      contentMarkdown: "",
+    });
+  };
+
   render() {
-    let { listClinic } = this.state;
+    let {
+      listClinic,
+      name,
+      image,
+      address,
+      previewImg,
+      contentHTML,
+      contentMarkdown,
+      isShowModalBooking,
+    } = this.state;
     let file = this.state.previewImg;
     return (
       <>
@@ -289,6 +325,20 @@ class ManageClinic extends Component {
                   >
                     <FormattedMessage id="manage-specialty.save" />
                   </button>
+                  {(name ||
+                    image ||
+                    address ||
+                    previewImg ||
+                    contentHTML ||
+                    contentMarkdown) && (
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-cancel"
+                      onClick={(e) => this.handleCancel(e)}
+                    >
+                      Huỷ
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
@@ -331,7 +381,7 @@ class ManageClinic extends Component {
                             </button>
                             <button
                               className="btn btn-delete"
-                              onClick={() => this.handleDeleteClinic(item)}
+                              onClick={() => this.showModalBooking(item)}
                             >
                               <i className="fas fa-trash"></i>
                             </button>
@@ -343,6 +393,41 @@ class ManageClinic extends Component {
               </tbody>
             </table>
           </div>
+          <Modal
+            isOpen={isShowModalBooking}
+            className={"schedule-modal"}
+            size="md"
+          >
+            <div className="modal-schedule-container">
+              <div className="modal-header">
+                <span>
+                  <i
+                    className="fas fa-times"
+                    onClick={() => this.closeModalBooking()}
+                  ></i>
+                </span>
+              </div>
+              <div className="modal-body">
+                <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                  Bạn muốn xoá phòng khám ?
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-confirm"
+                  onClick={() => this.handleDeleteClinic()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.confirm" />
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => this.closeModalBooking()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.cancel" />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </LoadingOverlay>
       </>
     );

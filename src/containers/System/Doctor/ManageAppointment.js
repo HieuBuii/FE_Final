@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Modal } from "reactstrap";
 import "./ManageAppointment.scss";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
@@ -25,6 +26,8 @@ class ManageAppointment extends Component {
       dataForModal: [],
       isLoading: false,
       id: "",
+      isShowModalBooking: false,
+      itemSelected: "",
     };
   }
 
@@ -52,6 +55,19 @@ class ManageAppointment extends Component {
       }
     }
   }
+
+  showModalBooking = (item) => {
+    this.setState({
+      isShowModalBooking: true,
+      itemSelected: item,
+    });
+  };
+
+  closeModalBooking = () => {
+    this.setState({
+      isShowModalBooking: false,
+    });
+  };
 
   handleOnchangeDatePicker = async (date) => {
     this.setState({
@@ -103,7 +119,8 @@ class ManageAppointment extends Component {
     });
   };
 
-  handleCancel = async (item) => {
+  handleCancel = async () => {
+    let item = this.state.itemSelected;
     let date = new Date().setHours(0, 0, 0, 0);
     this.setState({
       isLoading: true,
@@ -120,6 +137,7 @@ class ManageAppointment extends Component {
     });
     if (res && res.errCode === 0) {
       toast.success("Huỷ lịch hẹn thành công !!");
+      this.setState({ isShowModalBooking: false });
       let response = await getAppointmenDoctorService(this.state.id, date);
       if (response && response.errCode === 0) {
         this.setState({
@@ -144,7 +162,7 @@ class ManageAppointment extends Component {
   };
 
   render() {
-    let { data } = this.state;
+    let { data, isShowModalBooking } = this.state;
     let { language } = this.props;
     return (
       <>
@@ -212,7 +230,7 @@ class ManageAppointment extends Component {
                             </button>
                             <button
                               className="btn btn-cancel"
-                              onClick={() => this.handleCancel(item)}
+                              onClick={() => this.showModalBooking(item)}
                             >
                               Huỷ lịch hẹn
                             </button>
@@ -230,6 +248,41 @@ class ManageAppointment extends Component {
             dataFromParent={this.state.dataForModal}
             changeShowLoading={this.changeShowLoading}
           />
+          <Modal
+            isOpen={isShowModalBooking}
+            className={"schedule-modal"}
+            size="md"
+          >
+            <div className="modal-schedule-container">
+              <div className="modal-header">
+                <span>
+                  <i
+                    className="fas fa-times"
+                    onClick={() => this.closeModalBooking()}
+                  ></i>
+                </span>
+              </div>
+              <div className="modal-body">
+                <p className="text-center mt-4" style={{ fontSize: "20px" }}>
+                  Bạn muốn huỷ lịch hẹn ?
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn-confirm"
+                  onClick={() => this.handleCancel()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.confirm" />
+                </button>
+                <button
+                  className="btn-cancel"
+                  onClick={() => this.closeModalBooking()}
+                >
+                  <FormattedMessage id="user-view.booking-modal.cancel" />
+                </button>
+              </div>
+            </div>
+          </Modal>
         </LoadingOverlay>
       </>
     );
