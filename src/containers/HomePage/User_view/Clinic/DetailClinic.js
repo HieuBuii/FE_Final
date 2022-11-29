@@ -79,7 +79,7 @@ class DetailClinic extends Component {
 
   handleChangeSelect = async (e) => {
     let specialtyId = e.target.value;
-    if (specialtyId == 0) {
+    if (specialtyId === 0) {
       if (
         this.props.match &&
         this.props.match.params &&
@@ -124,8 +124,9 @@ class DetailClinic extends Component {
             if (arrDoctor && arrDoctor.length > 0) {
               arrDoctor.map((item) => {
                 if (item.doctorInfoData.id === +specialtyId) {
-                  return listDoctorId.push(item.doctorId);
+                  listDoctorId.push(item.doctorId);
                 }
+                return listDoctorId;
               });
             }
             this.setState({

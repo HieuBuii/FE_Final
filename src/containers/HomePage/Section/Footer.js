@@ -11,6 +11,7 @@ class Footer extends Component {
             <a
               href="https://github.com/HieuBuii/booking-care-FE"
               target="_blank"
+              rel="noreferrer"
             >
               Click here
             </a>{" "}
