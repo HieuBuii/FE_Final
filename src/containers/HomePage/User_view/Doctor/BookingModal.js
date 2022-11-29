@@ -18,6 +18,7 @@ class BookingModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      scheduleId: "",
       doctorId: "",
       fullName: "",
       phonenumber: "",
@@ -53,10 +54,12 @@ class BookingModal extends Component {
     }
     if (prevProps.dataTime !== this.props.dataTime) {
       if (this.props.dataTime && !_.isEmpty(this.props.dataTime)) {
+        let scheduleId = this.props.dataTime.id;
         let doctorId = this.props.dataTime.doctorId;
         let timeType = this.props.dataTime.timeType;
         let date = this.props.dataTime.date;
         this.setState({
+          scheduleId: scheduleId,
           doctorId: doctorId,
           timeType: timeType,
           date: date,
@@ -151,6 +154,7 @@ class BookingModal extends Component {
       let timeString = this.buildTimeBooking(this.props.dataTime);
       let doctorName = this.buildDoctorName(this.props.dataTime);
       let res = await savePatientBooking({
+        scheduleId: this.state.scheduleId,
         doctorId: this.state.doctorId,
         fullName: this.state.fullName,
         phonenumber: this.state.phonenumber,

@@ -127,6 +127,30 @@ class DoctorSchedule extends Component {
   render() {
     let { listDays, availabelTime } = this.state;
     let { language } = this.props;
+    let currentDate = new Date().getTime();
+
+    if (availabelTime && availabelTime.length > 0) {
+      availabelTime.map((item, index) => {
+        if (item && item.timeType === "T1") {
+          item.dateTimestamp = +item.date + 3600000 * 8;
+        } else if (item && item.timeType === "T2") {
+          item.dateTimestamp = +item.date + 3600000 * 9;
+        } else if (item && item.timeType === "T3") {
+          item.dateTimestamp = +item.date + 3600000 * 10;
+        } else if (item && item.timeType === "T4") {
+          item.dateTimestamp = +item.date + 3600000 * 11;
+        } else if (item && item.timeType === "T5") {
+          item.dateTimestamp = +item.date + 3600000 * 13;
+        } else if (item && item.timeType === "T6") {
+          item.dateTimestamp = +item.date + 3600000 * 14;
+        } else if (item && item.timeType === "T7") {
+          item.dateTimestamp = +item.date + 3600000 * 15;
+        } else if (item && item.timeType === "T8") {
+          item.dateTimestamp = +item.date + 3600000 * 16;
+        }
+        return availabelTime;
+      });
+    }
     return (
       <>
         <div className="schedule-container container">
@@ -152,19 +176,41 @@ class DoctorSchedule extends Component {
           <div className="availabel-time">
             {availabelTime && availabelTime.length > 0 ? (
               availabelTime.map((item, index) => {
-                let timeDisplay =
-                  language === LENGUAGES.VI
-                    ? item.timeTypeData.valueVi
-                    : item.timeTypeData.valueEn;
-                return (
-                  <button
-                    key={index}
-                    className="button-time"
-                    onClick={() => this.handleShowHideBooking(item)}
-                  >
-                    {timeDisplay}
-                  </button>
-                );
+                if (
+                  item &&
+                  item.dateTimestamp > currentDate &&
+                  +item.countBooking < 2
+                ) {
+                  return (
+                    <button
+                      key={index}
+                      className="button-time"
+                      onClick={() => this.handleShowHideBooking(item)}
+                    >
+                      {language === LENGUAGES.VI
+                        ? item.timeTypeData.valueVi
+                        : item.timeTypeData.valueEn}
+                    </button>
+                  );
+                } else if (
+                  (item && item.dateTimestamp < currentDate) ||
+                  +item.countBooking >= 2
+                ) {
+                  return (
+                    <button
+                      key={index}
+                      className="button-time"
+                      onClick={() => this.handleShowHideBooking(item)}
+                      style={{
+                        pointerEvents: "none",
+                        backgroundColor: "gray",
+                        color: "white",
+                      }}
+                    >
+                      Không có sẵn
+                    </button>
+                  );
+                }
               })
             ) : (
               <div className="no-schedule">
