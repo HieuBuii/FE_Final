@@ -203,8 +203,6 @@ class DetailUser extends Component {
         address: this.state.address,
         phonenumber: this.state.phonenumber,
         gender: this.state.gender,
-        roleId: "R3",
-        positionId: "P0",
         image: this.state.avatar,
       });
       this.setState({ isLoading: false, isChanged: false });
