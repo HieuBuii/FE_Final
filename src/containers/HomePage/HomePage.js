@@ -16,7 +16,15 @@ import "slick-carousel/slick/slick-theme.css";
 class HomePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      viewWidth: window.innerWidth,
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      viewWidth: window.innerWidth,
+    });
   }
 
   render() {
@@ -27,6 +35,15 @@ class HomePage extends Component {
       slidesToShow: 4,
       slidesToScroll: 2,
     };
+
+    let settingsSmall = {
+      dots: false,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 2,
+      slidesToScroll: 2,
+    };
+
     return (
       <div>
         <HomeHeader
@@ -34,9 +51,15 @@ class HomePage extends Component {
           isShowNavBar={this.state.isShowNavBar}
         />
         <Banner />
-        <Specialty settings={settings} />
-        <MedicalFacility settings={settings} />
-        <OutstandingDoctor settings={settings} />
+        <Specialty
+          settings={this.state.viewWidth >= 800 ? settings : settingsSmall}
+        />
+        <MedicalFacility
+          settings={this.state.viewWidth >= 800 ? settings : settingsSmall}
+        />
+        <OutstandingDoctor
+          settings={this.state.viewWidth >= 800 ? settings : settingsSmall}
+        />
         <HandBook />
         <About />
         <Footer />

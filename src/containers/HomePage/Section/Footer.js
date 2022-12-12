@@ -9,7 +9,7 @@ class Footer extends Component {
           <p>© 2022 Bui Trung Hieu_B18DCVT145.</p>
           <span>
             <a
-              href="https://github.com/HieuBuii/booking-care-FE"
+              href="https://github.com/HieuBuii?tab=repositories"
               target="_blank"
               rel="noreferrer"
             >

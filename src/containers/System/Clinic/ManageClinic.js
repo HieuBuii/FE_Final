@@ -114,9 +114,7 @@ class ManageClinic extends Component {
         );
         this.handleShowLoading(false);
         if (res && res.errCode === 0) {
-          toast.success(
-            <FormattedMessage id="manage-specialty.save-succeed" />
-          );
+          toast.success("Tạo phòng khám thành công !!");
           this.setState({
             name: "",
             address: "",
@@ -126,7 +124,7 @@ class ManageClinic extends Component {
             contentMarkdown: "",
           });
         } else {
-          toast.error(<FormattedMessage id="manage-specialty.save-failed" />);
+          toast.error("Tạo phòng khám thất bại, vui lòng thử lại !!");
         }
       } else {
         return;

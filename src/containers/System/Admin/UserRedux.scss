@@ -1,7 +1,7 @@
 .input-img-container {
   display: flex;
   .img-label {
-    width: 45%;
+    min-width: 45%;
     height: 34px;
     margin-right: 20px;
     display: block;
@@ -25,7 +25,7 @@
 
 .btn-submit {
   width: 150px;
-  height: 40px;
+  min-height: 40px;
 }
 
 .form-search {

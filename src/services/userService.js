@@ -194,6 +194,10 @@ const cancelAppointment = (data) => {
   return axios.post("/api/cancel-appointment", data);
 };
 
+const patientCancelAppointment = (data) => {
+  return axios.post("/api/patient-cancel-appoinment", data);
+};
+
 const saveHandBookService = (data) => {
   return axios.post("/api/create-handbook", data);
 };
@@ -279,4 +283,5 @@ export {
   getPatientAppointmentService,
   postRating,
   getRating,
+  patientCancelAppointment,
 };

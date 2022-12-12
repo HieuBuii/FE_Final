@@ -71,9 +71,9 @@ class TableManageUser extends Component {
             <thead>
               <tr>
                 <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Address</th>
+                <th>User Name</th>
+                {/* <th>Last Name</th> */}
+                {/* <th>Address</th> */}
                 <th>Phonenumber</th>
                 <th>Options</th>
               </tr>
@@ -84,9 +84,9 @@ class TableManageUser extends Component {
                 return (
                   <tr key={index}>
                     <td>{item.email}</td>
-                    <td>{item.firstName}</td>
-                    <td>{item.lastName}</td>
-                    <td>{item.address}</td>
+                    <td>{`${item.lastName} ${item.firstName}`}</td>
+                    {/* <td>{item.lastName}</td> */}
+                    {/* <td>{item.address}</td> */}
                     <td>{item.phonenumber}</td>
                     <td>
                       <div>
@@ -126,7 +126,7 @@ class TableManageUser extends Component {
             </div>
             <div className="modal-body">
               <p className="text-center mt-4" style={{ fontSize: "20px" }}>
-                Bạn muốn xoá phòng khám ?
+                Bạn muốn xoá người dùng ?
               </p>
             </div>
             <div className="modal-footer">

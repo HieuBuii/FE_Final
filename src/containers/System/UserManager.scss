@@ -4,6 +4,12 @@
   width: 100%;
 }
 
+#customers tbody tr td:last-child div {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 #customers td,
 #customers th {
   border: 1px solid #ddd;
@@ -35,11 +41,12 @@
 .btn-edit {
   background-color: coral;
   padding: 0 10px;
-  margin-right: 15px;
+  // margin-right: 15px;
 }
 .btn-delete {
   background-color: crimson;
   padding: 0 15px;
+  margin-left: 15px;
 }
 
 .userModal {

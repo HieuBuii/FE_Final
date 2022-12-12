@@ -67,6 +67,7 @@
     "add": "Users Manage",
     "email": "Email",
     "password": "Password",
+    "password2": "Confirm password",
     "first-name": "First name",
     "last-name": "Last name",
     "address": "Address",
@@ -79,7 +80,8 @@
     "save": "Add user",
     "edit": "Save change",
     "desc": "Description of specialty",
-    "add-image": "Add Image"
+    "add-image": "Add image",
+    "sign-up": "Sign up"
   },
   "manage-specialty": {
     "title": "Manage specialty",

@@ -9,6 +9,8 @@ import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import { userSignUp } from "../../../services/userService";
 import { toast } from "react-toastify";
+import HomeHeader from "../../HomePage/HomeHeader";
+import "./SignUp.scss";
 
 class SignUp extends Component {
   constructor(props) {
@@ -177,12 +179,12 @@ class SignUp extends Component {
     } = this.state;
     return (
       <>
-        {" "}
+        <HomeHeader />
         <div className="manage-container">
-          <div className="title mt-5">Đăng ký</div>
-          <div className="manage-body container">
+          <div className="manage-body container manage-container-signup">
+            <div className="title mt-5">Đăng ký</div>
             {signUpSucceed === "false" ? (
-              <form className="row g-3 mt-5">
+              <form className="row g-3 mt-3">
                 <div className="col-md-4">
                   <label className="form-label">
                     <FormattedMessage id="manage-user.email" />
@@ -238,7 +240,7 @@ class SignUp extends Component {
                     value={lastName}
                   />
                 </div>
-                <div className="col-4">
+                <div className="col-md-4">
                   <label className="form-label">
                     <FormattedMessage id="manage-user.phonenumber" />
                   </label>
@@ -247,17 +249,6 @@ class SignUp extends Component {
                     className="form-control"
                     onChange={(e) => this.handleChangeInput(e, "phonenumber")}
                     value={phonenumber}
-                  />
-                </div>
-                <div className="col-8">
-                  <label className="form-label">
-                    <FormattedMessage id="manage-user.address" />
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    onChange={(e) => this.handleChangeInput(e, "address")}
-                    value={address}
                   />
                 </div>
                 <div className="col-md-4">
@@ -281,6 +272,17 @@ class SignUp extends Component {
                         );
                       })}
                   </select>
+                </div>
+                <div className="col-md-8">
+                  <label className="form-label">
+                    <FormattedMessage id="manage-user.address" />
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => this.handleChangeInput(e, "address")}
+                    value={address}
+                  />
                 </div>
 
                 <div className="col-md-4">
@@ -327,11 +329,15 @@ class SignUp extends Component {
                 </div>
               </form>
             ) : (
-              <h3 className="text-center">
+              <h3 className="text-center" style={{ marginTop: "90px" }}>
                 Đăng ký thành công, bấm{" "}
                 <span
                   onClick={() => this.goToLogin()}
-                  style={{ textDecoration: "underline", color: "blue" }}
+                  style={{
+                    textDecoration: "underline",
+                    color: "blue",
+                    cursor: "pointer",
+                  }}
                 >
                   vào đây
                 </span>{" "}

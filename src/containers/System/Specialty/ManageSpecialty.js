@@ -120,9 +120,7 @@ class ManageSpecialty extends Component {
         );
         this.handleShowLoading(false);
         if (res && res.errCode === 0) {
-          toast.success(
-            <FormattedMessage id="manage-specialty.save-succeed" />
-          );
+          toast.success("Tạo chuyên khoa thành công !!");
           this.setState({
             nameVi: "",
             nameEn: "",
@@ -132,7 +130,7 @@ class ManageSpecialty extends Component {
             contentMarkdown: "",
           });
         } else {
-          toast.error(<FormattedMessage id="manage-specialty.save-failed" />);
+          toast.error("Tạo chuyên khoa thất bại, vui lòng thử lại !!");
         }
       } else {
         return;
@@ -400,7 +398,7 @@ class ManageSpecialty extends Component {
           <Modal
             isOpen={isShowModalBooking}
             className={"schedule-modal"}
-            size="lg"
+            size="md"
           >
             <div className="modal-schedule-container">
               <div className="modal-header">

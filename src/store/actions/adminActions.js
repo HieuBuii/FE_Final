@@ -96,10 +96,11 @@ export const createUser = (data, token) => {
       let res = await addUserService(data, token);
       if (res && res.errCode !== 0) toast.warn(res.errMessage);
       if (res && res.errCode === 0) {
-        toast.success("Create new user success !!");
+        toast.success("Tạo người dùng thành công !!");
         dispatch(createUserSuccess());
         dispatch(fetchAllUserStart(token));
       } else {
+        toast.success("Có lỗi xảy ra, vui lòng thử lại !!");
         dispatch(createUserFailed());
       }
     } catch (e) {
@@ -124,11 +125,11 @@ export const fetchAllUserStart = (token) => {
       if (res && res.errCode === 0) {
         dispatch(fetchAllUserSuccess(res.users.reverse()));
       } else {
-        toast.error(res.errMessage);
+        toast.error("Lấy danh sách người dùng thất bại !!");
         dispatch(fetchAllUserFailed());
       }
     } catch (e) {
-      toast.error("Fetch all users error");
+      toast.error("Lấy danh sách người dùng thất bại !!");
       dispatch(fetchAllUserFailed());
       console.log("fetchGenderStart error", e);
     }
@@ -149,15 +150,15 @@ export const deleteUser = (userId, token) => {
     try {
       let res = await deleteUserService(userId, token);
       if (res && res.errCode === 0) {
-        toast.success("Delete user success!!");
+        toast.success("Xoá người dùng thành công!!");
         dispatch(deleteUserSuccess());
         dispatch(fetchAllUserStart(token));
       } else {
-        toast.error(res.errMessage);
+        toast.error("Xoá người dùng thât bại");
         dispatch(deleteUserFailed());
       }
     } catch (e) {
-      toast.error("delete user error");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
       dispatch(deleteUserFailed());
       console.log("fetchGenderStart error", e);
     }
@@ -177,15 +178,15 @@ export const editUser = (data, token) => {
     try {
       let res = await editUserService(data, token);
       if (res && res.errCode === 0) {
-        toast.success("Edit user success!!");
+        toast.success("Lưu thay đổi thành công!!");
         dispatch(editUserSuccess());
         dispatch(fetchAllUserStart(token));
       } else {
-        toast.error(res.errMessage);
+        toast.error("Lưu thay đổi thất bại, vui lòng thử lại !!");
         dispatch(editUserFailed());
       }
     } catch (e) {
-      toast.error("Edit user error");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại !!");
       dispatch(editUserFailed());
       console.log("fetchGenderStart error", e);
     }
@@ -247,18 +248,18 @@ export const saveInfoDoctor = (data) => {
     try {
       let res = await saveInfoDoctorService(data);
       if (res && res.errCode === 0) {
-        toast.success("Save Info User Successed !!");
+        toast.success("Lưu thông tin thành công !!");
         dispatch({
           type: actionTypes.SAVE_INFO_DOCTORS_SUCCESS,
         });
       } else {
-        toast.error("Save Info User Failed !!");
+        toast.error("Lưu thông tin thất bại, vui lòng thử lại !!");
         dispatch({
           type: actionTypes.SAVE_INFO_DOCTORS_FAILED,
         });
       }
     } catch (e) {
-      toast.error("Save Info User Failed !!");
+      toast.error("Có lỗi xảy ra, vui lòng thử lại !!");
       dispatch({ type: actionTypes.SAVE_INFO_DOCTORS_FAILED });
       console.log("saveInfoDoctor error", e);
     }

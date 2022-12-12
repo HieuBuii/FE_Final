@@ -52,6 +52,12 @@ class Login extends Component {
       errMessage: "",
     });
     try {
+      if (!this.state.username || !this.state.password) {
+        this.setState({
+          errMessage: "Vui lòng nhập đủ thông tin !!",
+        });
+        return;
+      }
       this.setState({ isLoading: true });
       let data = await handleLoginApi(this.state.username, this.state.password);
       this.setState({ isLoading: false });

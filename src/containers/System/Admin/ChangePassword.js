@@ -21,9 +21,11 @@ class ChangePassword extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      email: this.props.userInfo.email,
-    });
+    if (this.props.userInfo && this.props.userInfo.email) {
+      this.setState({
+        email: this.props.userInfo.email,
+      });
+    }
   }
 
   componentDidUpdate(prevProps, prevStates) {

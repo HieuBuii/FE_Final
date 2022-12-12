@@ -9,7 +9,7 @@ import {
   getInfoUser,
   getPatientAppointmentService,
   postRating,
-  cancelAppointment,
+  patientCancelAppointment,
 } from "../../../../services/userService";
 import { LENGUAGES, CommonUtils } from "../../../../utils";
 import LoadingOverlay from "react-loading-overlay";
@@ -341,7 +341,7 @@ class DetailUser extends Component {
     this.setState({
       isLoading: true,
     });
-    let res = await cancelAppointment({
+    let res = await patientCancelAppointment({
       bookingId: item.id,
       doctorId: item.doctorId,
       patientId: item.patientId,
@@ -364,6 +364,7 @@ class DetailUser extends Component {
         }
       }
     } else {
+      this.setState({ isShowModalBooking: false });
       toast.error("Huỷ lịch hẹn thất bại, vui lòng thử lại !!");
     }
   };

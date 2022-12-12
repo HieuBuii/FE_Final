@@ -10,6 +10,7 @@ class HandBook extends Component {
     super(props);
     this.state = {
       listHandBook: [],
+      viewWidth: window.innerWidth,
     };
   }
 
@@ -41,10 +42,18 @@ class HandBook extends Component {
       dots: false,
       infinite: true,
       speed: 500,
+      slidesToShow: 3,
+      slidesToScroll: 2,
+    };
+
+    let settingsSmall = {
+      dots: false,
+      infinite: true,
+      speed: 500,
       slidesToShow: 2,
       slidesToScroll: 2,
     };
-    let { listHandBook } = this.state;
+    let { listHandBook, viewWidth } = this.state;
     return (
       <div className="section-common section-medical-facility">
         <div className="section-container container">
@@ -60,25 +69,51 @@ class HandBook extends Component {
             </button>
           </div>
           <div className="section-body">
-            <Slider {...settings}>
-              {listHandBook &&
-                listHandBook.length > 0 &&
-                listHandBook.map((item, index) => {
-                  return (
-                    <div
-                      className="section-custom"
-                      key={index}
-                      onClick={() => this.handleViewDetail(item)}
-                    >
+            {viewWidth >= 700 ? (
+              <Slider {...settings}>
+                {listHandBook &&
+                  listHandBook.length > 0 &&
+                  listHandBook.map((item, index) => {
+                    return (
                       <div
-                        className="section-img handbook-img"
-                        style={{ backgroundImage: `url(${item.image})` }}
-                      ></div>
-                      <p className="title-handbook">{item.name}</p>
-                    </div>
-                  );
-                })}
-            </Slider>
+                        className="section-custom"
+                        key={index}
+                        onClick={() => this.handleViewDetail(item)}
+                      >
+                        <div className="custom-handbook-section">
+                          <div
+                            className="section-img handbook-img"
+                            style={{ backgroundImage: `url(${item.image})` }}
+                          ></div>
+                          <p className="title-handbook">{item.name}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </Slider>
+            ) : (
+              <Slider {...settingsSmall}>
+                {listHandBook &&
+                  listHandBook.length > 0 &&
+                  listHandBook.map((item, index) => {
+                    return (
+                      <div
+                        className="section-custom"
+                        key={index}
+                        onClick={() => this.handleViewDetail(item)}
+                      >
+                        <div className="custom-handbook-section">
+                          <div
+                            className="section-img handbook-img"
+                            style={{ backgroundImage: `url(${item.image})` }}
+                          ></div>
+                          <p className="title-handbook">{item.name}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </Slider>
+            )}
           </div>
         </div>
       </div>

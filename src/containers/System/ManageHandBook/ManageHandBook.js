@@ -113,9 +113,7 @@ class ManageHandBook extends Component {
         });
         this.handleShowLoading(false);
         if (res && res.errCode === 0) {
-          toast.success(
-            <FormattedMessage id="manage-specialty.save-succeed" />
-          );
+          toast.success("Tạo bài đăng thành công");
           this.setState({
             name: "",
             author: "",
@@ -125,7 +123,7 @@ class ManageHandBook extends Component {
             contentMarkdown: "",
           });
         } else {
-          toast.error(<FormattedMessage id="manage-specialty.save-failed" />);
+          toast.error("Tạo bài đăng thất bại !!");
         }
       } else {
         return;
@@ -205,9 +203,9 @@ class ManageHandBook extends Component {
       let res = await deleteHandBookService(item.id);
       this.handleShowLoading(false);
       if (res && res.errCode === 0) {
-        toast.success(<FormattedMessage id="manage-clinic.delete-succeed" />);
+        toast.success("Xoá bài đăng thành công !!");
       } else {
-        toast.error(<FormattedMessage id="manage-clinic.delete-failed" />);
+        toast.error("Xoá bài đăng thất bại, vui lòng thử lại !!");
       }
     }
     let res = await getAllHandBook();

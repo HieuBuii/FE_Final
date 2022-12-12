@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
+import { LENGUAGES } from "../../utils/constant";
+import { changeLanguageApp } from "../../store/actions";
 
 class SliderNav extends Component {
   constructor(props) {
@@ -44,8 +46,13 @@ class SliderNav extends Component {
     this.props.handleShowNav(false);
   };
 
+  changeLanguage = (language) => {
+    this.props.changeLanguageAppRedux(language);
+  };
+
   render() {
     let { isShow } = this.state;
+    let { language } = this.props;
     return (
       <>
         {isShow === true ? (
@@ -101,6 +108,31 @@ class SliderNav extends Component {
                   <FormattedMessage id="homeheader.check-health" />
                 </div>
               </li>
+              <li>
+                <div className="content-lang-nav">
+                  <span
+                    className={
+                      language === LENGUAGES.VI
+                        ? "content-lang-vi isActive"
+                        : "content-lang-vi"
+                    }
+                    onClick={() => this.changeLanguage(LENGUAGES.VI)}
+                  >
+                    VI
+                  </span>
+                  <span>/</span>
+                  <span
+                    className={
+                      language === LENGUAGES.EN
+                        ? "content-lang-en isActive"
+                        : "content-lang-en"
+                    }
+                    onClick={() => this.changeLanguage(LENGUAGES.EN)}
+                  >
+                    EN
+                  </span>
+                </div>
+              </li>
             </ul>
           </div>
         ) : (
@@ -118,7 +150,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    changeLanguageAppRedux: (languages) =>
+      dispatch(changeLanguageApp(languages)),
+  };
 };
 
 export default withRouter(

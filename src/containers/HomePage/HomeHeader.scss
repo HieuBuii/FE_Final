@@ -100,12 +100,14 @@
               position: absolute;
               background-color: #fff;
               color: #000;
-              padding: 0;
+              padding: 5px 0 0 0;
+              border-radius: 10px;
               list-style: none;
               font-size: 14px;
               font-weight: 400;
               min-width: 150px;
               left: -50px;
+              box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.25);
               &::after {
                 content: "";
                 border-bottom: 7px solid #fff;
@@ -119,6 +121,9 @@
               .list-item {
                 padding: 5px 10px;
                 border-bottom: 1px solid #000;
+                &:last-child {
+                  border-bottom: none;
+                }
                 &:hover {
                   background-color: #ccc;
                 }
@@ -156,6 +161,37 @@
           }
         }
       }
+    }
+  }
+}
+
+.content-lang-nav {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgb(128, 126, 126);
+  .content-lang-vi {
+    margin-right: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+    &.isActive {
+      opacity: 1;
+      color: #1f05d7;
+    }
+    &:hover {
+      color: coral;
+    }
+  }
+  .content-lang-en {
+    margin-left: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+    &.isActive {
+      opacity: 1;
+      color: #1f05d7;
+    }
+    &:hover {
+      color: coral;
     }
   }
 }
@@ -219,7 +255,7 @@
     .banner-down-options {
       list-style: none;
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-between;
       width: 50%;
       .banner-options {
